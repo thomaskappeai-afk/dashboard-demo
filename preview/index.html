@@ -327,13 +327,8 @@ const MODEL={
     BE:{Shopify:500}
   },
   /* Trend per land (laatste 6 maanden omzet excl. btw) — alleen landen met data */
-  landTrend:{
-    labels:['apr','mei','jun','jul','aug','sep'],
-    NL:[62000,68000,69000,71000,78000,85000],
-    DE:[18000,20000,21000,22000,24000,25500],
-    BE:[5500,6000,6200,6800,7400,8000],
-    FR:[1200,1400,1500,1600,1800,2000]
-  },
+  /* Trends worden afgeleid van historie × landomzet in OSS/IOSS — geen aparte reeks */
+  trendLabels:['apr','mei','jun','jul','aug','sep'],
   variabel:{inkoop:63480,fees:9360,verzending:7880,retouren:3340,ads:12000},
   vast:{
     abonnementen:389,
@@ -473,6 +468,28 @@ function schemeTotals(scheme){
   const rows=schemeRows(scheme);
   return {omzet:rows.reduce((a,r)=>a+r.omzet,0),btw:rows.reduce((a,r)=>a+(r.btw||0),0),rows};
 }
+
+function landSchemeOmzetBase(scheme, code){
+  const src=scheme==='ioss'?MODEL.ioss:MODEL.oss;
+  if(!src[code])return 0;
+  return Object.values(src[code]).reduce((a,b)=>a+b,0);
+}
+/** Trend apr→geselecteerde maand; laatste punt === getoonde maandomzet (na period-scale). */
+function landSchemeTrend(scheme, code){
+  const base=landSchemeOmzetBase(scheme, code);
+  if(!base)return null;
+  const labels=MODEL.trendLabels;
+  const h=MODEL.historie;
+  const periodIdx={jul:3,aug:4,sep:5}[state.period];
+  const vals=labels.map(k=>Math.round(base*h[k]/h.sep));
+  vals[5]=base; /* sep exact */
+  const shown=Math.round(base*scale());
+  const outLabs=labels.slice(0,periodIdx+1);
+  const outVals=vals.slice(0,periodIdx+1);
+  outVals[outVals.length-1]=shown; /* === KPI/kaart-omzet */
+  return {labels:outLabs,values:outVals};
+}
+
 function nlOmzet(){return omzetPerLand().NL||0;}
 function buitenlandOmzet(){return omzetTotaal()-nlOmzet();}
 function variabelTotaal(){
@@ -539,7 +556,7 @@ function forecast(){
 }
 
 /* Expose model snapshot for consistency script */
-window.__DTADMIN_VAT__=EU_VAT;window.__DTADMIN_VAT_SOURCE__=VAT_SOURCE;
+window.__DTADMIN_VAT__=EU_VAT;window.__DTADMIN_VAT_SOURCE__=VAT_SOURCE;window.__DTADMIN_TREND__=landSchemeTrend;window.__DTADMIN_OMZET__=omzetTotaal;
 window.__DTADMIN_MODEL__=function(){
   const w=winst(),btw=btwSamenvatting(),oss=schemeTotals('oss'),ioss=schemeTotals('ioss'),f=forecast();
   return {
@@ -563,6 +580,7 @@ function revenueChart(){
   const labels=['apr','mei','jun','jul','aug','sep'],vals=Object.values(MODEL.historie);
   const ind=['jul','aug','sep'].indexOf(state.period);
   const show=vals.slice(0,ind+4),labs=labels.slice(0,ind+4);
+  show[show.length-1]=omzetTotaal(); /* laatste balk === KPI-omzet */
   const W=740,H=220,l=44,t=10,b=30,h=H-t-b,max=140000,w=(W-l-16)/show.length;
   let v='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzetontwikkeling">';
   [0,40000,80000,120000].forEach(a=>{const y=t+h*(1-a/max);v+='<line x1="'+l+'" x2="720" y1="'+y+'" y2="'+y+'" stroke="#edf0f3"/><text x="34" y="'+(y+4)+'" fill="#8791a0" text-anchor="end" font-size="10">'+a/1000+'k</text>';});
@@ -592,7 +610,7 @@ function ratePct(r){
 }
 function spark(values,labels){
   if(!values||!values.length)return '<div class="empty-soft">Nog geen trend</div>';
-  const labs=labels||MODEL.landTrend.labels||[];
+  const labs=labels||MODEL.trendLabels||[];
   const W=320,H=78,padL=2,padR=2,padT=8,padB=18;
   const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
   const x=i=>padL+i*(W-padL-padR)/Math.max(1,values.length-1);
@@ -726,21 +744,22 @@ function vatPopoverHtml(code){
   return '<h4 id="sheet-title">Btw-tarieven · '+esc(v.naam)+'</h4><div class="rates">'+rows.join('')+'</div>'+(v.note?'<p>'+esc(v.note)+'</p>':'')+'<div class="src">Bron: '+esc(VAT_SOURCE.name)+'<br>'+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+(v.extraBron?'<br>Tweede bron: '+esc(v.extraBron):'')+'<br><a href="'+VAT_SOURCE.url+'" target="_blank" rel="noopener">Your Europe</a> · <a href="'+VAT_SOURCE.tedb+'" target="_blank" rel="noopener">TEDB</a></div>';
 }
 
-function countryCard(code,omzet,btw,schemeLabel){
+function countryCard(code,omzet,btw,schemeLabel,scheme){
   const v=EU_VAT[code];
   const has=omzet>0;
-  const trend=MODEL.landTrend[code];
+  const trend=landSchemeTrend(scheme||state.ossScheme, code);
   const rate=v.standaard;
   const rateTxt=ratePct(rate);
-  /* Altijd EC-standaardtarief tonen; btw moet rate*omzet/100 zijn */
-  return '<article class="country-card" data-land="'+code+'" data-rate="'+rate+'" data-omzet="'+omzet+'" data-btw="'+(btw==null?'':btw)+'">'+
+  const trendLast=trend?trend.values[trend.values.length-1]:'';
+  const rangeLbl=trend?(trend.labels[0]+'–'+trend.labels[trend.labels.length-1]+' 2026'):'';
+  return '<article class="country-card" data-land="'+code+'" data-rate="'+rate+'" data-omzet="'+omzet+'" data-btw="'+(btw==null?'':btw)+'" data-trend-last="'+trendLast+'">'+
     '<div class="head"><h3>'+esc(v.naam)+' <button class="info" type="button" data-vatinfo="'+code+'" aria-label="Btw-tarieven '+esc(v.naam)+'" aria-haspopup="dialog">i</button></h3>'+
     (state.extraCountries.includes(code)?'<button class="btn danger" type="button" data-remove-land="'+code+'" style="padding:6px 10px;font-size:11px">Verwijderen</button>':'')+
     '</div>'+
     (has?
       '<div class="metric" style="border:0;padding:0"><span>Omzet '+schemeLabel+'</span><strong>'+money(omzet)+'</strong></div>'+
       '<div class="metric" style="border:0;padding:0"><span>Verschuldigde btw (<span class="rate-label">'+rateTxt+'</span>)</span><strong>'+money(btw)+'</strong></div>'+
-      (trend?'<div><div class="sub" style="margin-bottom:4px">Omzettrend · apr–sep 2026</div>'+spark(trend,MODEL.landTrend.labels)+'</div>':'')
+      (trend?'<div><div class="sub" style="margin-bottom:4px">Omzettrend · '+rangeLbl+'</div>'+spark(trend.values,trend.labels)+'</div>':'')
     :'<div class="empty-soft">Nog geen verkopen in dit land</div>')+
   '</article>';
 }
@@ -760,7 +779,7 @@ function viewOss(){
   const shown=new Set([...tot.rows.map(r=>r.land),...state.extraCountries]);
   const cards=[...shown].sort().map(code=>{
     const r=dataMap[code];
-    return countryCard(code,r?r.omzet:0,r?r.btw:0,scheme.toUpperCase());
+    return countryCard(code,r?r.omzet:0,r?r.btw:0,scheme.toUpperCase(),scheme);
   }).join('');
   html+=panel('Per EU-land',scheme==='oss'?'Unie-regeling OSS':'Importregeling IOSS',
     '<div class="oss-grid">'+cards+'</div>'+
