@@ -25,12 +25,13 @@ a{color:var(--marine)}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .skip{position:absolute;left:-999px;top:8px;background:var(--deep);color:#fff;padding:8px 12px;z-index:40;border-radius:6px}
 .skip:focus{left:8px}
-.demo-banner{position:sticky;top:0;z-index:20;background:var(--deep);color:#d4e1f3;font-size:12px;padding:8px 18px;display:flex;align-items:center;justify-content:center;gap:10px}
+.shell{margin-left:var(--sidebar);min-height:100vh;background:var(--cream)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar);height:100vh;min-height:100vh;background:var(--deep);color:#fff;padding:20px 14px 16px;display:flex;flex-direction:column;z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.brand{background:var(--cream);width:100%;max-width:180px;border-radius:10px;align-self:center;padding:10px 14px;margin-bottom:12px;display:flex;justify-content:center;border:1px solid #ffffff22;box-shadow:inset 0 0 0 1px #061e5210}
+.brand img{width:120px;height:96px;object-fit:contain}
+.sticky-head{position:sticky;top:0;z-index:15;background:var(--cream)}
+.demo-banner{background:var(--deep);color:#d4e1f3;font-size:12px;padding:8px 18px;display:flex;align-items:center;justify-content:center;gap:10px}
 .demo-banner strong{color:var(--lightgold);font-weight:600}
-.shell{margin-left:var(--sidebar);min-height:100vh}
-.sidebar{position:fixed;inset:0 auto 0 0;width:var(--sidebar);background:var(--deep);color:#fff;padding:22px 16px 18px;display:flex;flex-direction:column;z-index:12;overflow-y:auto}
-.brand{background:#fff;width:168px;border-radius:8px;align-self:center;padding:8px 16px;margin-bottom:14px;display:flex;justify-content:center}
-.brand img{width:128px;height:102px;object-fit:contain}
 .client{background:#ffffff0c;border:1px solid #ffffff18;border-radius:9px;margin:6px 2px 16px;padding:12px;font-size:13px}
 .client small{display:block;color:#aabbd5;font-size:11px;margin-top:3px}
 .nav-label{font-size:10px;letter-spacing:1.6px;color:#aabbd5;padding:0 12px;margin:14px 0 8px;text-transform:uppercase}
@@ -42,7 +43,7 @@ a{color:var(--marine)}
 .icon{width:18px;height:18px;flex:none}
 .sidebar-foot{margin-top:auto;border-top:1px solid #ffffff1a;padding:16px 10px 4px;font-size:12px;color:#aabbd5}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--lightgold);margin-right:7px}
-.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:32px;z-index:9}
+.topbar{height:56px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}
 .top-left{display:flex;align-items:center;gap:12px}
 .menu-button{display:none;width:38px;height:38px;place-items:center;border-radius:8px;background:#f1f4f8;color:var(--marine)}
 .crumb{font-size:12px;color:var(--muted)}
@@ -128,19 +129,19 @@ tfoot td{font-weight:700;background:#f8f9fb;border-bottom:0}
 .country-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff;display:flex;flex-direction:column;gap:10px}
 .country-card .head{display:flex;justify-content:space-between;align-items:start;gap:10px}
 .country-card .head h3{font-size:15px;color:var(--deep);display:flex;align-items:center;gap:8px}
-.spark{width:100%;height:44px}
+.spark-wrap{margin-top:4px}.spark{width:100%;height:78px;display:block}.spark-meta{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}.spark-meta strong{color:var(--deep);font-weight:600}.trend-note{font-size:12px;color:var(--deep);margin-top:6px}
 .empty-soft{padding:18px;text-align:center;color:var(--muted);font-size:13px;background:#fafbfc;border-radius:8px;border:1px dashed var(--line)}
 .add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:8px}
 .add-row label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
 .add-row select{padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:200px;color:var(--deep)}
-.popover{position:absolute;z-index:30;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px #061e5228;padding:14px 16px;width:min(320px,calc(100vw - 32px));font-size:12px;color:var(--muted)}
+.popover{position:absolute;z-index:36;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px #061e5228;padding:14px 16px;width:min(320px,calc(100vw - 32px));font-size:12px;color:var(--muted)}
 .popover h4{color:var(--deep);font-size:13px;margin-bottom:8px}
 .popover .rates{display:grid;gap:6px;margin:10px 0}
 .popover .rates div{display:flex;justify-content:space-between;gap:10px}
 .popover .src{font-size:11px;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
-.popover-backdrop{position:fixed;inset:0;background:#061e5240;z-index:25;display:none}
+.popover-backdrop{position:fixed;inset:0;background:#061e5240;z-index:35;display:none}
 .popover-backdrop.show{display:block}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:#fff;border-radius:16px 16px 0 0;padding:18px 18px 28px;max-height:70vh;overflow:auto;transform:translateY(110%);transition:transform .25s var(--ease);box-shadow:0 -8px 40px #061e5230}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-radius:16px 16px 0 0;padding:18px 18px 28px;max-height:70vh;overflow:auto;transform:translateY(110%);transition:transform .25s var(--ease);box-shadow:0 -8px 40px #061e5230}
 .sheet.open{transform:translateY(0)}
 .sheet .handle{width:40px;height:4px;background:#d5dbe3;border-radius:4px;margin:0 auto 14px}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--deep);color:#fff;padding:12px 18px;border-radius:8px;font-size:12px;z-index:40;display:none;box-shadow:0 5px 25px #061e5220}
@@ -169,10 +170,13 @@ input[type=range]{width:100%;accent-color:var(--marine)}
   .shell{margin-left:0}
   .menu-button{display:grid}
   .mobile-overlay.show{display:block;position:fixed;inset:0;background:#061e5260;z-index:11}
-  .topbar{padding:0 16px;top:36px}
-  main{padding:20px 16px 40px}
+  .sidebar{z-index:30}
+  .topbar{padding:0 16px;height:52px}
+  main{padding:16px 16px 40px}
   h1{font-size:24px}
-  .demo-banner{font-size:11px;padding:8px 12px;text-align:center}
+  .demo-banner{font-size:11px;padding:8px 12px;text-align:center;line-height:1.35}
+  .sticky-head{z-index:15}
+  .spark{height:72px}
   .kpis{gap:10px}
   .kpi .k-value{font-size:24px}
   .panel{padding:16px}
@@ -186,16 +190,17 @@ input[type=range]{width:100%;accent-color:var(--marine)}
 </head>
 <body>
 <a class="skip" href="#main">Naar inhoud</a>
-<div class="demo-banner" role="status"><span class="dot" aria-hidden="true"></span><span><strong>Voorbeelddata</strong> · fictieve klant Noordmarkt BV · geen echte cijfers</span></div>
 <div class="mobile-overlay" id="overlay" hidden></div>
 <aside class="sidebar" id="sidebar" aria-label="Hoofdnavigatie">
-  <div class="brand"><img src="logo.png" width="128" height="102" alt="DT Admin"></div>
+  <div class="brand"><img src="logo.png" width="120" height="96" alt="DT Admin"></div>
   <div class="client"><strong id="client-name">Noordmarkt BV</strong><small>Webshop woonaccessoires · voorbeeldklant</small></div>
   <div class="nav-label">Financieel inzicht</div>
   <nav class="nav" id="nav"></nav>
-  <div class="sidebar-foot"><span class="dot"></span>Demo · peildatum <span id="peil-label">14 okt 2026</span></div>
+  <div class="sidebar-foot"><span class="dot"></span>Demo-peildatum <span id="peil-label">14 okt 2026</span><br><span style="opacity:.85;font-size:11px">Cijfers t/m september 2026</span></div>
 </aside>
 <div class="shell">
+  <div class="sticky-head">
+  <div class="demo-banner" role="status"><span class="dot" aria-hidden="true"></span><span><strong>Voorbeelddata</strong> · fictieve klant Noordmarkt BV · geen echte cijfers</span></div>
   <header class="topbar">
     <div class="top-left">
       <button class="menu-button" id="menu" aria-label="Menu openen" aria-controls="sidebar" aria-expanded="false">
@@ -214,6 +219,7 @@ input[type=range]{width:100%;accent-color:var(--marine)}
       </select>
     </div>
   </header>
+  </div>
   <main id="main" tabindex="-1">
     <div class="heading">
       <div>
@@ -264,7 +270,7 @@ const VAT_SOURCE={
   name:'Your Europe (Europese Commissie) · VAT rates applied in EU member countries',
   url:'https://europa.eu/youreurope/business/finance-and-tax/vat/vat-rules-rates/index_en.htm',
   tedb:'https://ec.europa.eu/taxation_customs/tedb/',
-  peil:'28 oktober 2026'
+  peil:'28 oktober 2026', label:'tarieven gecontroleerd op'
 };
 const EU_VAT={
   AT:{naam:'Oostenrijk',standaard:20,verlaagd:[10,13],super:null,parking:13},
@@ -322,6 +328,7 @@ const MODEL={
   },
   /* Trend per land (laatste 6 maanden omzet excl. btw) — alleen landen met data */
   landTrend:{
+    labels:['apr','mei','jun','jul','aug','sep'],
     NL:[62000,68000,69000,71000,78000,85000],
     DE:[18000,20000,21000,22000,24000,25500],
     BE:[5500,6000,6200,6800,7400,8000],
@@ -532,6 +539,7 @@ function forecast(){
 }
 
 /* Expose model snapshot for consistency script */
+window.__DTADMIN_VAT__=EU_VAT;window.__DTADMIN_VAT_SOURCE__=VAT_SOURCE;
 window.__DTADMIN_MODEL__=function(){
   const w=winst(),btw=btwSamenvatting(),oss=schemeTotals('oss'),ioss=schemeTotals('ioss'),f=forecast();
   return {
@@ -577,15 +585,32 @@ function lineChart(actual,buffer){
   actual.forEach((a,i)=>{v+='<circle cx="'+x(i)+'" cy="'+y(a)+'" r="'+(a<buffer?4:3)+'" fill="'+(a<buffer?'#a33b36':'#0c3b7a')+'"/>';if(i%2===0)v+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle" fill="#7c8797" font-size="10">W'+(i+1)+'</text>';});
   return v+'</svg>';
 }
-function spark(values){
-  if(!values||!values.length)return '';
-  const W=220,H=44,min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
-  const pts=values.map((v,i)=>{
-    const x=i*(W-4)/(values.length-1)+2;
-    const y=H-6-((v-min)/span)*(H-12);
-    return x+','+y;
-  }).join(' ');
-  return '<svg class="spark" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Trend 6 maanden"><polyline points="'+pts+'" fill="none" stroke="#0C3B7A" stroke-width="2" stroke-linejoin="round"/></svg>';
+function ratePct(r){
+  if(r==null||r===undefined)return 'tarief nog niet gecontroleerd';
+  const s=Number(r);
+  return (Number.isInteger(s)?String(s):String(s).replace('.',','))+'%';
+}
+function spark(values,labels){
+  if(!values||!values.length)return '<div class="empty-soft">Nog geen trend</div>';
+  const labs=labels||MODEL.landTrend.labels||[];
+  const W=320,H=78,padL=2,padR=2,padT=8,padB=18;
+  const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
+  const x=i=>padL+i*(W-padL-padR)/Math.max(1,values.length-1);
+  const y=v=>padT+(H-padT-padB)*(1-(v-min)/span);
+  const pts=values.map((v,i)=>x(i)+','+y(v)).join(' ');
+  let svg='<svg class="spark" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzettrend over 6 maanden">';
+  svg+='<polyline points="'+pts+'" fill="none" stroke="#0C3B7A" stroke-width="2.2" stroke-linejoin="round"/>';
+  values.forEach((v,i)=>{
+    svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="2.6" fill="#0C3B7A"><title>'+(labs[i]||('M'+(i+1)))+': '+money(v)+'</title></circle>';
+    if(labs[i])svg+='<text x="'+x(i)+'" y="'+(H-4)+'" text-anchor="middle" fill="#7c8797" font-size="9">'+labs[i]+'</text>';
+  });
+  svg+='</svg>';
+  const start=values[0],end=values[values.length-1];
+  const growth=start?((end-start)/start*100):0;
+  const gtxt=growth>=0?('groeit '+pct(Math.abs(growth))+' in 6 maanden'):('daalt '+pct(Math.abs(growth))+' in 6 maanden');
+  return '<div class="spark-wrap">'+svg+
+    '<div class="spark-meta"><span>Start <strong>'+money(start)+'</strong></span><span>Nu <strong>'+money(end)+'</strong></span></div>'+
+    '<p class="trend-note">'+gtxt+'</p></div>';
 }
 
 /* ===== Views ===== */
@@ -646,7 +671,7 @@ function viewCashflow(){
   let html=meaning('Wat betekent dit voor jou','Winst op papier is iets anders dan geld op de rekening. Hier zie je of je de komende weken kunt betalen wat eraan komt — inclusief bedragen die een betaalprovider nog vasthoudt.');
   html+='<div class="kpis">'+card('Beschikbare bankcash',money(MODEL.cash.bank),'Peildatum '+dateFmt(MODEL.client.peil),true)+card('Mollie onderweg',money(MODEL.cash.mollieOnderweg),'In de ontvangstenplanning')+card('Geblokkeerde reserve',money(MODEL.cash.mollieGeblokkeerd),'Niet vrij opneembaar')+card('Laagste scenario',money(f.min),'Week van '+dateFmt(f.minRow.date))+'</div>';
   html+=calloutBlok();
-  html+=panel('Cashflow komende 13 weken','Vanaf 19 oktober 2026 · bedragen inclusief betaalde btw',
+  html+=panel('Cashflow komende 13 weken','Vanaf 19 okt 2026 (na peildatum '+dateFmt(MODEL.client.peil)+') · bedragen inclusief betaalde btw',
     '<div class="scenario">'+
     '<div class="control"><label for="receipt-change">Ontvangsten <strong id="receipt-label">'+(state.receiptChange>=0?'+':'')+state.receiptChange+'%</strong></label><input id="receipt-change" type="range" min="-30" max="30" step="5" value="'+state.receiptChange+'"><small>Uitgaven blijven gelijk.</small></div>'+
     '<div class="control"><label for="delay">Later ontvangen <strong id="delay-label">'+state.delay+' dagen</strong></label><input id="delay" type="range" min="0" max="14" step="7" value="'+state.delay+'"><small>Alleen timing, geen omzetverlies.</small></div>'+
@@ -676,9 +701,9 @@ function viewBelastingen(){
   html+='<div class="kpis">'+card('Verschuldigde btw',money(b.verschuldigd),'NL + OSS + IOSS',true)+card('Voorbelasting',money(b.voorbelasting),'Op inkoop en kosten')+card('Te betalen',money(b.teBetalen),'Na aftrek voorbelasting')+card('Buitenland-omzet',money(buitenlandOmzet()),'OSS + IOSS')+'</div>';
   html+='<div class="grid half">'+panel('Btw per land','Standaardtarief · '+periodLabel(),
     '<div class="table-wrap"><table><thead><tr><th>Land</th><th class="number">Omzet</th><th class="number">Tarief</th><th class="number">Btw</th></tr></thead><tbody>'+
-    '<tr><td>Nederland (binnenland)</td><td class="number">'+money(b.nl.omzet)+'</td><td class="number">'+b.nl.rate+'%</td><td class="number">'+money(b.nl.btw)+'</td></tr>'+
-    b.oss.rows.map(r=>'<tr><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">OSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+r.rate+'%</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
-    b.ioss.rows.map(r=>'<tr><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">IOSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+r.rate+'%</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
+    '<tr><td>Nederland (binnenland)</td><td class="number">'+money(b.nl.omzet)+'</td><td class="number">'+ratePct(b.nl.rate)+'</td><td class="number">'+money(b.nl.btw)+'</td></tr>'+
+    b.oss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">OSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
+    b.ioss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">IOSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
     '</tbody><tfoot><tr><td>Totaal verschuldigd</td><td></td><td></td><td class="number">'+money(b.verschuldigd)+'</td></tr></tfoot></table></div>'+
     '<div class="note">Detail per regeling staat op de tab OSS / IOSS. Tarieven: '+VAT_SOURCE.name+'.</div>'
   )+panel('Per verkoopkanaal','Omzet excl. btw',
@@ -698,21 +723,24 @@ function vatPopoverHtml(code){
   else rows.push('<div><span>Verlaagd</span><strong>geen in EC-tabel</strong></div>');
   if(v.super!=null)rows.push('<div><span>Superverlaagd</span><strong>'+v.super+'%</strong></div>');
   if(v.parking!=null)rows.push('<div><span>Parking</span><strong>'+v.parking+'%</strong></div>');
-  return '<h4 id="sheet-title">Btw-tarieven · '+esc(v.naam)+'</h4><div class="rates">'+rows.join('')+'</div>'+(v.note?'<p>'+esc(v.note)+'</p>':'')+'<div class="src">Bron: '+esc(VAT_SOURCE.name)+'<br>Peildatum: '+esc(VAT_SOURCE.peil)+(v.extraBron?'<br>Tweede bron: '+esc(v.extraBron):'')+'<br><a href="'+VAT_SOURCE.url+'" target="_blank" rel="noopener">Your Europe</a> · <a href="'+VAT_SOURCE.tedb+'" target="_blank" rel="noopener">TEDB</a></div>';
+  return '<h4 id="sheet-title">Btw-tarieven · '+esc(v.naam)+'</h4><div class="rates">'+rows.join('')+'</div>'+(v.note?'<p>'+esc(v.note)+'</p>':'')+'<div class="src">Bron: '+esc(VAT_SOURCE.name)+'<br>'+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+(v.extraBron?'<br>Tweede bron: '+esc(v.extraBron):'')+'<br><a href="'+VAT_SOURCE.url+'" target="_blank" rel="noopener">Your Europe</a> · <a href="'+VAT_SOURCE.tedb+'" target="_blank" rel="noopener">TEDB</a></div>';
 }
 
 function countryCard(code,omzet,btw,schemeLabel){
   const v=EU_VAT[code];
   const has=omzet>0;
   const trend=MODEL.landTrend[code];
-  return '<article class="country-card" data-land="'+code+'">'+
+  const rate=v.standaard;
+  const rateTxt=ratePct(rate);
+  /* Altijd EC-standaardtarief tonen; btw moet rate*omzet/100 zijn */
+  return '<article class="country-card" data-land="'+code+'" data-rate="'+rate+'" data-omzet="'+omzet+'" data-btw="'+(btw==null?'':btw)+'">'+
     '<div class="head"><h3>'+esc(v.naam)+' <button class="info" type="button" data-vatinfo="'+code+'" aria-label="Btw-tarieven '+esc(v.naam)+'" aria-haspopup="dialog">i</button></h3>'+
     (state.extraCountries.includes(code)?'<button class="btn danger" type="button" data-remove-land="'+code+'" style="padding:6px 10px;font-size:11px">Verwijderen</button>':'')+
     '</div>'+
     (has?
       '<div class="metric" style="border:0;padding:0"><span>Omzet '+schemeLabel+'</span><strong>'+money(omzet)+'</strong></div>'+
-      '<div class="metric" style="border:0;padding:0"><span>Verschuldigde btw ('+v.standaard+'%)</span><strong>'+money(btw)+'</strong></div>'+
-      (trend?'<div><div class="sub" style="margin-bottom:4px">Trend · 6 maanden</div>'+spark(trend)+'</div>':'')
+      '<div class="metric" style="border:0;padding:0"><span>Verschuldigde btw (<span class="rate-label">'+rateTxt+'</span>)</span><strong>'+money(btw)+'</strong></div>'+
+      (trend?'<div><div class="sub" style="margin-bottom:4px">Omzettrend · apr–sep 2026</div>'+spark(trend,MODEL.landTrend.labels)+'</div>':'')
     :'<div class="empty-soft">Nog geen verkopen in dit land</div>')+
   '</article>';
 }
@@ -742,7 +770,7 @@ function viewOss(){
     '</select></label>'+
     '<button class="btn" type="button" id="btn-add-land">Toevoegen</button>'+
     '</div>'+
-    '<div class="note">Toegevoegde landen zonder verkopen veranderen de totalen niet. Bron tarieven: '+esc(VAT_SOURCE.name)+', peildatum '+esc(VAT_SOURCE.peil)+'.</div>'
+    '<div class="note">Toegevoegde landen zonder verkopen veranderen de totalen niet. Bron tarieven: '+esc(VAT_SOURCE.name)+'; '+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+'. Demo-peildatum cijfers: '+dateFmt(MODEL.client.peil)+'.</div>'
   );
   return html;
 }
@@ -778,7 +806,7 @@ function render(){
   document.getElementById('crumb').textContent='Dashboard / '+t[0];
   document.getElementById('period').value=state.period;
   document.getElementById('client-name').textContent=MODEL.client.naam;
-  document.getElementById('peil-label').textContent=dateFmt(MODEL.client.peil).replace(/\./g,'');
+  document.getElementById('peil-label').textContent=dateFmt(MODEL.client.peil);
   const map={overzicht:viewOverzicht,resultaat:viewResultaat,abonnementen:viewAbonnementen,cashflow:viewCashflow,belastingen:viewBelastingen,oss:viewOss,acties:viewActies};
   document.getElementById('content').innerHTML=map[state.view]();
   bind();
