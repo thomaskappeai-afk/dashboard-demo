@@ -352,6 +352,35 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid #dedfdc;display:fle
 .pill.warn{background:var(--amberbg);color:var(--amber)}
 .card.hero .pill.warn{background:rgba(255,255,255,.14);color:var(--lightgold)}
 
+
+.card.hero .pill.neutral,
+.card.hero .pill.marine,
+.card.hero .pill.gold,
+.card.hero .pill.amber{
+  background:rgba(255,255,255,.16);
+  color:#fff;
+}
+.card.hero .pill.up{background:rgba(255,255,255,.16);color:var(--lightgold)}
+.card.hero .pill.down{background:rgba(255,255,255,.16);color:#ffb4b0}
+.card.hero .pill.warn{background:rgba(255,255,255,.16);color:var(--lightgold)}
+.callout.ok{
+  background:var(--greenbg);
+  border-color:rgba(31,107,74,.2);
+  color:var(--green);
+}
+.callout.ok strong{color:var(--green)}
+.callout .callout-ico{flex:none;font-size:18px;line-height:1;margin-top:1px}
+input[type=range]{
+  width:100%;accent-color:var(--marine);
+  height:44px;min-height:44px;margin:0;padding:12px 0;
+  box-sizing:content-box;
+}
+.control{padding:4px 0}
+@media(max-width:760px){
+  input[type=range]{height:48px}
+  .control label{font-size:14px;margin-bottom:4px}
+}
+
 </style>
 </head>
 <body>
@@ -1058,8 +1087,8 @@ function viewOverzicht(){
   html+=kpiCard({extraClass:'rail-cost',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),
     sparkHtml:miniSpark(costSeries),
     pills:[deltaPill(dKosten,'up-bad')],info:'Variabel + vast'});
-  html+=kpiCard({i:4,label:'Mollie hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Hold','amber')],info:'Geblokkeerde reserve'});
-  html+=kpiCard({i:5,label:'Btw',value:moneyCount(btw.teBetalen),pills:[pill('te betalen','marine')],info:'Na aftrek voorbelasting'});
+  html+=kpiCard({i:4,label:'Geblokkeerd bij Mollie',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Niet opneembaar','amber')],info:'Geblokkeerde reserve'});
+  html+=kpiCard({i:5,label:'Btw te betalen',value:moneyCount(btw.teBetalen),pills:[pill('Na aftrek','marine')],info:'Na aftrek voorbelasting'});
   html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
 
   const acts=MODEL.acties.filter(a=>!state.done[a.id]).slice(0,4).map(a=>
@@ -1075,8 +1104,8 @@ function viewOverzicht(){
     const r=kt[n];return '<div class="bar-row"><div class="bar-top"><span>'+n+'</span><strong>'+money(r.omzet)+'</strong></div><div class="track"><div style="width:'+(r.omzet/w.omzet*100)+'%;background:'+r.kleur+'"></div></div></div>';
   }).join('');
   html+=panel('Kanalen',channels,{span:2,i:8});
-  html+=kpiCard({i:9,label:'Onderweg',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')],info:'In ontvangstenplanning'});
-  html+=kpiCard({i:10,label:'Marge',value:'<span class="count-num" data-count="'+Math.round(w.winst/w.omzet*100)+'" data-decimals="0">'+Math.round(w.winst/w.omzet*100)+'</span><span style="font-size:.5em;margin-left:2px">%</span>',pills:[pill('vóór btw','neutral')],info:'Resultaat / omzet'});
+  html+=kpiCard({i:9,label:'Onderweg van Mollie',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')],info:'In de ontvangstenplanning'});
+  html+=kpiCard({i:10,label:'Winstmarge',value:'<span class="count-num" data-count="'+Math.round(w.winst/w.omzet*100)+'" data-decimals="0">'+Math.round(w.winst/w.omzet*100)+'</span><span style="font-size:.5em;margin-left:2px">%</span>',pills:[pill('vóór btw','neutral')],info:'Resultaat / omzet'});
   html+='</div>';
   return html;
 }
@@ -1093,11 +1122,11 @@ function viewResultaat(){
     pills:[deltaPill(dW,'up-good'), pill(pct(w.winst/w.omzet*100)+' marge','neutral')],
     info:'Vóór belasting · '+periodLabel()});
   html+=kpiCard({i:1,label:'Omzet',value:moneyCount(w.omzet),pills:[deltaPill(dO,'up-good')]});
-  html+=kpiCard({i:2,label:'Variabel',value:moneyCount(v.som),info:'Inkoop, fees, verzending, ads'});
+  html+=kpiCard({i:2,label:'Variabele kosten',value:moneyCount(v.som),info:'Inkoop, fees, verzending, ads'});
   html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
-  html+=kpiCard({i:3,label:'Vast',value:moneyCount(f.som),info:'Incl. abonnementen '+money(f.abonnementen)});
-  html+=kpiCard({i:4,label:'Kosten',value:moneyCount(w.variabel+w.vast),pills:[deltaPill(dK,'up-bad')],info:'Variabel + vast'});
-  html+=kpiCard({i:5,label:'Ads',value:moneyCount(v.ads),pills:[pill(pct(v.ads/w.omzet*100),'amber')]});
+  html+=kpiCard({span:2,i:3,label:'Vaste kosten',value:moneyCount(f.som),info:'Incl. abonnementen '+money(f.abonnementen)});
+  html+=kpiCard({i:4,label:'Totale kosten',value:moneyCount(w.variabel+w.vast),pills:[deltaPill(dK,'up-bad')],info:'Variabel + vast'});
+  html+=kpiCard({i:5,label:'Advertenties',value:moneyCount(v.ads),pills:[pill(pct(v.ads/w.omzet*100)+' van omzet','amber')]});
   html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+=panel('Van omzet naar resultaat',
     '<div class="metric"><span>Netto-omzet</span><strong>'+money(w.omzet)+'</strong></div>'+
@@ -1126,7 +1155,7 @@ function viewAbonnementen(){
   html+=kpiCard({hero:true,span:2,i:0,label:'Vaste maandkosten',value:moneyCount(vaste),
     pills:[pill(money(vaste*12)+'/jr','neutral')],info:'Jaarbedragen / 12'});
   html+=kpiCard({i:1,label:'Te beoordelen',value:plainCount(beoordelen),pills:[beoordelen?pill('Actie','amber'):pill('Ok','up')]});
-  html+=kpiCard({i:2,label:'Variabel',value:moneyCount(variabel),info:'Laatste maand'});
+  html+=kpiCard({i:2,label:'Variabel verbruik',value:moneyCount(variabel),info:'Laatste maand'});
   const rows=MODEL.abonnementen.map(a=>{
     const m=a.cyclus==='variabel'?a.bedrag:aboMaand(a);
     const st=a.status==='beoordelen'?'Beoordelen':a.status==='variabel'?'Variabel':'Actief';
@@ -1140,39 +1169,61 @@ function viewAbonnementen(){
   return html;
 }
 
-function callout(title,detail,red){
-  return '<div class="callout'+(red?' attention':'')+'">'+ii('alert')+'<div><strong>'+title+'</strong></div>'+infoBtn(detail)+'</div>';
+function callout(title,detail,tone){
+  /* tone: 'bad' | 'warn' | 'ok' */
+  tone = tone===true?'bad':(tone===false?'warn':(tone||'warn'));
+  const cls = tone==='bad'?' attention':(tone==='ok'?' ok':'');
+  const ico = tone==='ok'?'check-circle':'alert';
+  /* use check icon from iconoir */
+  const iconHtml = tone==='ok'
+    ? '<i class="iconoir-check-circle callout-ico" aria-hidden="true"></i>'
+    : ii('alert').replace('class="','class="callout-ico ');
+  return '<div class="callout'+cls+'">'+iconHtml+'<div><strong>'+title+'</strong></div>'+(detail?infoBtn(detail):'')+'</div>';
 }
 
 function viewCashflow(){
   const f=forecast();
+  const safe = f.below===0 && f.min>=0;
   let html='<div class="bento kpis">';
   html+=kpiCard({hero:true,span:2,i:0,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
     pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
-    info:'Beschikbaar · peildatum '+dateFmt(MODEL.client.peil)});
-  html+=kpiCard({i:1,label:'Onderweg',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')]});
-  html+=kpiCard({i:2,label:'Hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Geblokkeerd','amber')],info:'Niet vrij opneembaar'});
+    info:'Beschikbaar op peildatum '+dateFmt(MODEL.client.peil)});
+  html+=kpiCard({i:1,label:'Onderweg van Mollie',value:moneyCount(MODEL.cash.mollieOnderweg),
+    pills:[pill('Mollie','gold')],info:'Staat in de ontvangstenplanning, nog niet op je bank'});
+  html+=kpiCard({i:2,label:'Geblokkeerd bij Mollie',value:moneyCount(MODEL.cash.mollieGeblokkeerd),
+    pills:[pill('Niet opneembaar','amber')],info:'Reserve/hold — hoort bij je omzet maar staat niet vrij'});
   html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
-  html+=kpiCard({i:3,label:'Laagste',value:moneyCount(f.min),pills:[f.min<state.buffer?pill('Onder buffer','down'):pill('Ok','up')],info:'Week van '+dateFmt(f.minRow.date)});
-  html+=kpiCard({i:4,label:'Eind 13w',value:moneyCount(f.end)});
-  html+=kpiCard({i:5,label:'Onder buffer',value:plainCount(f.below),pills:[f.below?pill('weken','amber'):pill('0','up')]});
+  html+=kpiCard({span:2,i:3,label:'Laagste saldo',value:moneyCount(f.min),
+    pills:[f.min<state.buffer?pill('Onder buffer','down'):pill('Boven buffer','up')],
+    info:'Laagste eindsaldo in de planning · week van '+dateFmt(f.minRow.date)});
+  html+=kpiCard({i:4,label:'Over 13 weken',value:moneyCount(f.end),
+    info:'Verwacht eindsaldo na 13 weken'});
+  html+=kpiCard({i:5,label:'Weken onder buffer',
+    value:f.below?plainCount(f.below):('<span class="count-num" data-count="0" data-decimals="0">0</span><span style="font-size:.45em;margin-left:4px;font-weight:600"> weken</span>'),
+    pills:[f.below?pill(f.below+' weken','amber'):pill('Veilig','up')],
+    info:'Aantal weken waarin het saldo onder je gekozen buffer komt'});
   html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
 
-  html+=panel('13 weken',
-    callout('Mollie houdt '+money(MODEL.cash.mollieGeblokkeerd)+' vast','Providers zetten soms een reserve op uitbetalingen. Telt niet als beschikbare cash.',true)+
+  const mollieTitle='Mollie houdt '+money(MODEL.cash.mollieGeblokkeerd).replace(/\u00a0/g,' ')+' vast';
+  html+=panel('Komende 13 weken',
+    callout(mollieTitle,'Providers zetten soms een reserve op uitbetalingen (chargebacks/risico). Dat telt niet als beschikbare cash.','bad')+
     '<div class="scenario">'+
-    '<div class="control"><label for="receipt-change">Ontvangsten <strong id="receipt-label">'+(state.receiptChange>=0?'+':'')+state.receiptChange+'%</strong></label><input id="receipt-change" type="range" min="-30" max="30" step="5" value="'+state.receiptChange+'"></div>'+
-    '<div class="control"><label for="delay">Vertraging <strong id="delay-label">'+state.delay+' d</strong></label><input id="delay" type="range" min="0" max="14" step="7" value="'+state.delay+'"></div>'+
-    '<div class="control"><label for="buffer">Buffer <strong id="buffer-label">'+money(state.buffer)+'</strong></label><input id="buffer" type="range" min="0" max="20000" step="1000" value="'+state.buffer+'"></div>'+
+    '<div class="control"><label for="receipt-change">Omzet hoger/lager <strong id="receipt-label">'+(state.receiptChange>=0?'+':'')+state.receiptChange+'%</strong></label><input id="receipt-change" type="range" min="-30" max="30" step="5" value="'+state.receiptChange+'" aria-valuemin="-30" aria-valuemax="30"></div>'+
+    '<div class="control"><label for="delay">Klanten betalen later (dagen) <strong id="delay-label">'+state.delay+' dagen</strong></label><input id="delay" type="range" min="0" max="14" step="7" value="'+state.delay+'"></div>'+
+    '<div class="control"><label for="buffer">Minimale buffer <strong id="buffer-label">'+money(state.buffer)+'</strong></label><input id="buffer" type="range" min="0" max="20000" step="1000" value="'+state.buffer+'"></div>'+
     '</div>'+
-    (f.min<0?callout('Negatief saldo','Planning komt onder nul.',true):f.below?callout(f.below+' weken onder buffer','Scenario onder je buffer.',false):callout('Binnen buffer','Saldi blijven boven de gekozen buffer.',false))+
+    (f.min<0
+      ? callout('Negatief saldo','De planning komt onder nul. Bekijk inkoopmomenten of financiering.','bad')
+      : f.below
+        ? callout(f.below+' weken onder buffer','In '+f.below+' weken kom je onder je gekozen buffer.','warn')
+        : callout('Binnen buffer','De geplande saldi blijven boven je buffer.','ok'))+
     '<div class="legend"><span><i style="background:#0C3B7A"></i>Eindsaldo</span><span><i style="background:#C49A30"></i>Buffer</span></div>'+
     lineChart(f.list.map(r=>r.end),state.buffer),
     {span:4,row:2,i:6});
 
   html+=panel('Weekplanning',
     '<div class="table-wrap"><table><thead><tr><th>Vanaf</th><th class="number">Begin</th><th class="number">In</th><th class="number">Uit</th><th class="number">Eind</th><th></th></tr></thead><tbody>'+
-    f.list.map(r=>'<tr><td>'+dateFmt(r.date).replace(/ 2026/,'')+'</td><td class="number">'+money(r.start)+'</td><td class="number">'+money(r.receipts)+'</td><td class="number">'+money(r.payments)+'</td><td class="number" style="color:'+(r.end<state.buffer?'var(--red)':'var(--deep)')+'">'+money(r.end)+'</td><td>'+tag(r.end<0?'Onder nul':r.end<state.buffer?'Buffer':'Ok',r.end<0?'red':r.end<state.buffer?'amber':'green')+'</td></tr>').join('')+
+    f.list.map(r=>'<tr><td>'+dateFmt(r.date).replace(/ 2026/,'')+'</td><td class="number">'+money(r.start)+'</td><td class="number">'+money(r.receipts)+'</td><td class="number">'+money(r.payments)+'</td><td class="number" style="color:'+(r.end<state.buffer?'var(--red)':'var(--deep)')+'">'+money(r.end)+'</td><td>'+tag(r.end<0?'Onder nul':r.end<state.buffer?'Onder buffer':'Ok',r.end<0?'red':r.end<state.buffer?'amber':'green')+'</td></tr>').join('')+
     '</tbody></table></div>',
     {span:4,i:7});
   html+='</div>';
@@ -1182,15 +1233,15 @@ function viewCashflow(){
 function viewBelastingen(){
   const b=btwSamenvatting();
   let html='<div class="bento kpis">';
-  html+=kpiCard({hero:true,span:2,i:0,label:'Te betalen',value:moneyCount(b.teBetalen),
-    pills:[pill('na voorbelasting','neutral')],
-    info:'Verschuldigd − voorbelasting'});
-  html+=kpiCard({i:1,label:'Verschuldigd',value:moneyCount(b.verschuldigd),pills:[pill('NL+OSS+IOSS','marine')]});
-  html+=kpiCard({i:2,label:'Voorbelasting',value:moneyCount(b.voorbelasting)});
+  html+=kpiCard({hero:true,span:2,i:0,label:'Nog te betalen',value:moneyCount(b.teBetalen),
+    pills:[pill('Na voorbelasting','neutral')],
+    info:'Verschuldigde btw minus voorbelasting'});
+  html+=kpiCard({i:1,label:'Btw verschuldigd',value:moneyCount(b.verschuldigd),pills:[pill('NL + OSS + IOSS','marine')]});
+  html+=kpiCard({i:2,label:'Voorbelasting',value:moneyCount(b.voorbelasting),info:'Btw die je zelf al betaalde op inkopen'});
   html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
-  html+=kpiCard({i:3,label:'NL btw',value:moneyCount(b.nl.btw),pills:[pill(ratePct(b.nl.rate),'neutral')]});
-  html+=kpiCard({i:4,label:'OSS btw',value:moneyCount(b.oss.btw)});
-  html+=kpiCard({i:5,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS omzet'});
+  html+=kpiCard({span:2,i:3,label:'Nederland',value:moneyCount(b.nl.btw),pills:[pill(ratePct(b.nl.rate),'neutral')]});
+  html+=kpiCard({i:4,label:'OSS-btw',value:moneyCount(b.oss.btw)});
+  html+=kpiCard({i:5,label:'Buitenland-omzet',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS omzet'});
   html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+=panel('Per land',
     '<div class="table-wrap"><table><thead><tr><th>Land</th><th class="number">Omzet</th><th class="number">Tarief</th><th class="number">Btw</th></tr></thead><tbody>'+
@@ -1245,12 +1296,12 @@ function viewOss(){
   html+=kpiCard({hero:true,span:2,i:0,label:scheme==='oss'?'OSS-omzet':'IOSS-omzet',value:moneyCount(tot.omzet),
     pills:[pill(periodLabel().split(' ')[0],'neutral')],
     info:scheme==='oss'?'B2C btw via Unie-regeling OSS.':'Importzendingen ≤ €150 via IOSS.'});
-  html+=kpiCard({i:1,label:'Btw',value:moneyCount(tot.btw),pills:[pill('standaard','marine')]});
-  html+=kpiCard({i:2,label:scheme==='oss'?'IOSS':'OSS',value:moneyCount(other.omzet)});
+  html+=kpiCard({i:1,label:'Verschuldigde btw',value:moneyCount(tot.btw),pills:[pill('Standaardtarief','marine')]});
+  html+=kpiCard({i:2,label:scheme==='oss'?'IOSS-omzet':'OSS-omzet',value:moneyCount(other.omzet)});
   html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
-  html+=kpiCard({i:3,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS'});
-  html+=kpiCard({i:4,label:'Landen',value:plainCount(tot.rows.length)});
-  html+=kpiCard({i:5,label:'Peil tarieven',value:'<span style="font-size:18px;font-weight:650;letter-spacing:-.3px">'+VAT_SOURCE.peil.replace(' oktober ',' okt ')+'</span>',info:VAT_SOURCE.name});
+  html+=kpiCard({span:2,i:3,label:'Buitenland totaal',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS'});
+  html+=kpiCard({i:4,label:'EU-landen',value:plainCount(tot.rows.length)});
+  html+=kpiCard({i:5,label:'Tarieven peil',value:'<span style="font-size:18px;font-weight:650;letter-spacing:-.3px">'+VAT_SOURCE.peil.replace(' oktober ',' okt ')+'</span>',info:VAT_SOURCE.name});
   html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+='<div class="span-4" style="grid-column:span 4"><div class="tabs-pill" role="tablist" aria-label="Regeling"><button type="button" data-scheme="oss" class="'+(scheme==='oss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='oss')+'">OSS</button><button type="button" data-scheme="ioss" class="'+(scheme==='ioss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='ioss')+'">IOSS ≤ €150</button></div></div>';
 
@@ -1277,10 +1328,10 @@ function viewOss(){
 function viewActies(){
   let html='<div class="bento kpis">';
   const open=MODEL.acties.filter(a=>!state.done[a.id]).length;
-  html+=kpiCard({hero:true,span:2,i:0,label:'Open',value:plainCount(open),
+  html+=kpiCard({hero:true,span:2,i:0,label:'Openstaand',value:plainCount(open),
     pills:[pill(MODEL.acties.length+' totaal','neutral')]});
-  html+=kpiCard({i:1,label:'Hoog',value:plainCount(MODEL.acties.filter(a=>a.prio==='Hoog'&&!state.done[a.id]).length),pills:[pill('prio','down')]});
-  html+=kpiCard({i:2,label:'Jij',value:plainCount(MODEL.acties.filter(a=>(a.door||'').toLowerCase().startsWith('jij')&&!state.done[a.id]).length),pills:[pill('actie','marine')]});
+  html+=kpiCard({i:1,label:'Hoge prioriteit',value:plainCount(MODEL.acties.filter(a=>a.prio==='Hoog'&&!state.done[a.id]).length),pills:[pill('Urgent','down')]});
+  html+=kpiCard({i:2,label:'Voor jou',value:plainCount(MODEL.acties.filter(a=>(a.door||'').toLowerCase().startsWith('jij')&&!state.done[a.id]).length),pills:[pill('Jij','marine')]});
   html+=panel('Actiepunten',
     '<div class="filterbar"><button class="btn ghost" type="button" id="reset-tasks">Herstel</button></div>'+
     MODEL.acties.map(a=>'<div class="action'+(state.done[a.id]?' done':'')+'"><input type="checkbox" class="check" data-task="'+a.id+'" '+(state.done[a.id]?'checked':'')+' aria-label="'+esc(a.titel)+'"><div style="flex:1"><p>'+esc(a.titel)+'</p><div class="meta">'+whoPill(a.door)+pill(dateFmt(a.datum).replace(/ 2026/,''),'neutral')+tag(a.prio,a.prio==='Hoog'?'red':'amber')+'</div><p class="note" style="margin-top:6px;font-weight:400">'+esc(a.tekst)+'</p></div></div>').join(''),
@@ -1384,7 +1435,7 @@ function bind(){
     render();
   }
   if(rc){rc.oninput=()=>{document.getElementById('receipt-label').textContent=(+rc.value>=0?'+':'')+rc.value+'%';};rc.onchange=refreshCash;}
-  if(dl){dl.oninput=()=>{document.getElementById('delay-label').textContent=dl.value+' d';};dl.onchange=refreshCash;}
+  if(dl){dl.oninput=()=>{document.getElementById('delay-label').textContent=dl.value+' dagen';};dl.onchange=refreshCash;}
   if(bf){bf.oninput=()=>{document.getElementById('buffer-label').textContent=money(+bf.value);};bf.onchange=refreshCash;}
 }
 
