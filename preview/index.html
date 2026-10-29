@@ -16,7 +16,7 @@
   --ink:#222;--muted:#555;--line:#E8E8E8;--white:#fff;
   --green:#1F6B4A;--greenbg:rgba(31,107,74,.12);--red:#A33B36;--redbg:rgba(163,59,54,.12);
   --amber:#8A6A1F;--amberbg:rgba(138,106,31,.12);
-  --radius:24px;--gap:18px;--sidebar:76px;
+  --radius:24px;--gap:16px;--sidebar:76px;
   --ease-out:cubic-bezier(0.23,1,0.32,1);
   --ease-io:cubic-bezier(0.77,0,0.175,1);
   --shadow:0 4px 20px -4px rgba(0,0,0,.05);
@@ -28,9 +28,9 @@ body{
   font-family:"Instrument Sans",system-ui,sans-serif;color:var(--ink);line-height:1.45;
   background:var(--cream);
   background-image:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(12,59,122,.07), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 90% 0%, rgba(196,154,48,.06), transparent 50%),
-    radial-gradient(ellipse 50% 40% at 70% 100%, rgba(6,30,82,.04), transparent 45%);
+    radial-gradient(ellipse 80% 50% at 8% -8%, rgba(12,59,122,.08), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 96% 0%, rgba(196,154,48,.07), transparent 50%),
+    radial-gradient(ellipse 45% 35% at 75% 100%, rgba(6,30,82,.04), transparent 45%);
   background-attachment:fixed;min-height:100vh;-webkit-font-smoothing:antialiased;
 }
 button,input,select{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
@@ -38,6 +38,7 @@ a{color:var(--marine)}
 .sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .skip{position:absolute;left:-999px;top:8px;background:var(--deep);color:#fff;padding:8px 12px;z-index:50;border-radius:8px}
 .skip:focus{left:8px}
+
 .sidebar{
   position:fixed;inset:0 auto 0 0;width:var(--sidebar);height:100vh;min-height:100vh;
   background:var(--deep);color:#fff;z-index:30;display:flex;flex-direction:column;
@@ -69,73 +70,101 @@ a{color:var(--marine)}
 .nav button i{font-size:22px;line-height:1}
 .sidebar-foot{font-size:9px;color:#aabbd5;text-align:center;padding:8px 6px;line-height:1.35;opacity:.85}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--lightgold);margin-right:4px;vertical-align:middle}
+
 .shell{margin-left:var(--sidebar);min-height:100vh}
-.sticky-head{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);background:rgba(245,243,238,.82)}
+.sticky-head{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);background:rgba(245,243,238,.88)}
 .demo-banner{
   background:var(--deep);color:#d4e1f3;font-size:12px;padding:8px 20px;
   display:flex;align-items:center;justify-content:center;gap:8px;
 }
 .demo-banner strong{color:var(--lightgold);font-weight:600}
 .topbar{
-  height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;
-  border-bottom:1px solid rgba(232,232,232,.8);
+  height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+  border-bottom:1px solid rgba(232,232,232,.8);gap:12px;
 }
-.menu-button{display:none;width:40px;height:40px;place-items:center;border-radius:12px;background:#fff;color:var(--marine);border:1px solid var(--line)}
-.crumb{font-size:13px;color:var(--muted);font-weight:500}
+.menu-button{display:none;width:40px;height:40px;place-items:center;border-radius:12px;background:#fff;color:var(--marine);border:1px solid var(--line);flex:none}
+.crumb{font-size:13px;color:var(--muted);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb .crumb-client{display:inline}
 .period{
   appearance:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 32px 8px 14px;
-  font-size:13px;font-weight:500;color:var(--deep);
+  font-size:13px;font-weight:500;color:var(--deep);flex:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23061E52' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 12px center;
 }
-main{padding:28px 28px 56px;max-width:1200px}
-.heading{margin-bottom:22px}
-h1{font-size:28px;letter-spacing:-.4px;color:var(--deep);font-weight:650}
+
+/* Full width content — fills shell */
+main{padding:24px 28px 56px;width:100%;max-width:none;margin:0}
+.heading{margin-bottom:18px;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+h1{font-size:26px;letter-spacing:-.45px;color:var(--deep);font-weight:650}
 .sub{display:none}
-.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--gap)}
+
+/* Bento */
+.bento{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-auto-rows:minmax(112px,auto);gap:var(--gap);align-items:stretch;
+}
+.kpis.bento{margin-bottom:0}
 .card{
   background:#fff;border:1px solid rgba(0,0,0,.05);border-radius:var(--radius);
-  padding:24px;box-shadow:var(--shadow);min-width:0;position:relative;overflow:hidden;
+  padding:22px;box-shadow:var(--shadow);min-width:0;position:relative;overflow:hidden;
+  display:flex;flex-direction:column;
 }
 .card.span-2{grid-column:span 2}
 .card.span-3{grid-column:span 3}
-.card.span-4{grid-column:span 4}
-.card.hero{background:var(--deep);color:#fff;border-color:transparent;transform-style:preserve-3d}
-.card.hero .k-label{color:rgba(255,255,255,.72)}
-.card.hero .k-value{color:#fff}
-.card.hero .k-delta{color:var(--lightgold)}
-.hero-orb{
-  position:absolute;right:-40px;top:-50px;width:180px;height:180px;border-radius:50%;
-  background:radial-gradient(circle,rgba(196,154,48,.35),rgba(212,183,106,.08) 50%,transparent 70%);
-  filter:blur(28px);pointer-events:none;
+.card.span-4,.span-4{grid-column:span 4}
+.card.row-2{grid-row:span 2;min-height:340px}
+.card.hero{
+  background:var(--deep);color:#fff;border-color:transparent;
+  transform-style:preserve-3d;min-height:168px;padding:26px;
 }
-.k-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px;font-weight:500;color:var(--muted)}
-.k-value{font-size:clamp(32px,4vw,44px);font-weight:650;letter-spacing:-1.2px;color:var(--deep);margin-top:10px;font-variant-numeric:tabular-nums;line-height:1.05}
-.k-delta{font-size:13px;font-weight:600;margin-top:8px}
-.k-delta.pos{color:var(--green)}.k-delta.neg{color:var(--red)}
-.card.hero .k-delta.pos,.card.hero .k-delta.neg{color:var(--lightgold)}
-.enter{opacity:0;transform:translateY(15px) scale(.98);animation:enterIn .48s var(--spring) forwards}
+.card.hero .k-label{color:rgba(255,255,255,.7)}
+.card.hero .k-value{color:#fff;font-size:clamp(40px,4.2vw,52px)}
+.hero-orb{
+  position:absolute;right:-30px;top:-60px;width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(212,183,106,.62) 0%,rgba(196,154,48,.28) 42%,transparent 70%);
+  filter:blur(40px);pointer-events:none;opacity:1;
+}
+.k-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;font-weight:500;color:var(--muted)}
+.k-value{font-size:clamp(28px,3.2vw,40px);font-weight:650;letter-spacing:-1.1px;color:var(--deep);margin-top:8px;font-variant-numeric:tabular-nums;line-height:1.05}
+.k-foot{margin-top:auto;padding-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.k-spark{margin-top:10px;height:36px}
+.k-spark svg{width:100%;height:36px;display:block}
+
+.enter{opacity:0;transform:translateY(12px) scale(.985);animation:enterIn .45s var(--spring) forwards}
 @keyframes enterIn{to{opacity:1;transform:translateY(0) scale(1)}}
 @media (prefers-reduced-motion:reduce){
   .enter{opacity:1;transform:none;animation:none!important}
   .bar-grow,.draw-line,.draw-area{animation:none!important;stroke-dashoffset:0!important;transform:none!important}
   .hero{transform:none!important}
 }
+
 .info{
-  width:22px;height:22px;border-radius:50%;background:#eff2f6;color:var(--marine);
-  display:inline-grid;place-items:center;font-size:12px;font-weight:700;flex:none;padding:0;
+  width:20px;height:20px;border-radius:50%;background:#eff2f6;color:var(--marine);
+  display:inline-grid;place-items:center;font-size:11px;font-weight:700;flex:none;padding:0;
 }
 .card.hero .info{background:rgba(255,255,255,.16);color:#fff}
+
+.pill{
+  display:inline-flex;align-items:center;gap:4px;border-radius:999px;
+  padding:3px 10px;font-size:12px;font-weight:600;line-height:1.3;
+}
+.pill.up{background:var(--greenbg);color:var(--green)}
+.pill.down{background:var(--redbg);color:var(--red)}
+.pill.neutral{background:rgba(82,98,118,.1);color:#526276}
+.pill.amber{background:var(--amberbg);color:var(--amber)}
+.pill.gold{background:rgba(196,154,48,.16);color:#8a6a1f}
+.pill.marine{background:rgba(12,59,122,.1);color:var(--marine)}
+.card.hero .pill.up,.card.hero .pill.down{background:rgba(255,255,255,.14);color:var(--lightgold)}
 .tag{display:inline-flex;align-items:center;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:500}
 .tag.green{background:var(--greenbg);color:var(--green)}
 .tag.amber{background:var(--amberbg);color:var(--amber)}
 .tag.red{background:var(--redbg);color:var(--red)}
 .tag.neutral{background:rgba(82,98,118,.1);color:#526276}
-.panel-h{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:16px}
-.panel-h h2{font-size:16px;font-weight:650;color:var(--deep)}
-.card.hero .panel-h h2{color:#fff}
-.chart-wrap{position:relative;width:100%}
-.chart{width:100%;height:auto;max-height:240px;overflow:visible}
+
+.panel-h{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.panel-h h2{font-size:15px;font-weight:650;color:var(--deep);letter-spacing:-.2px}
+.chart-wrap{position:relative;width:100%;flex:1}
+.chart{width:100%;height:auto;max-height:280px;overflow:visible}
 .chart-tip{
   position:absolute;pointer-events:none;background:var(--deep);color:#fff;font-size:12px;
   padding:8px 10px;border-radius:10px;opacity:0;transform:translate(-50%,-120%) scale(.96);
@@ -143,7 +172,8 @@ h1{font-size:28px;letter-spacing:-.4px;color:var(--deep);font-weight:650}
 }
 .chart-tip.show{opacity:1}
 .crosshair{stroke:var(--marine);stroke-width:1;stroke-dasharray:3 3;opacity:.35}
-.metric{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px}
+
+.metric{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
 .metric:last-child{border:0}
 .metric strong{font-variant-numeric:tabular-nums;color:var(--deep);font-weight:600}
 .table-wrap{overflow:auto}
@@ -153,14 +183,16 @@ td{padding:12px 10px;border-bottom:1px solid var(--line);font-variant-numeric:ta
 th:first-child,td:first-child{padding-left:0}
 .number{text-align:right}
 tfoot td{font-weight:700;background:#fafafa;border-bottom:0}
-.action{display:flex;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+
+.action{display:flex;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}
 .action:last-child{border:0}
-.action p{font-size:14px;font-weight:600;color:var(--deep)}
-.action small{display:block;font-size:12px;color:var(--muted);margin-top:3px}
+.action p{font-size:13.5px;font-weight:600;color:var(--deep);line-height:1.35}
+.action .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .check{width:18px;height:18px;appearance:none;border:1px solid #ccd3de;border-radius:6px;background:#fff;flex:none;margin-top:2px;cursor:pointer}
 .check:checked{background:var(--marine);border-color:var(--marine)}
 .check:checked:after{content:"✓";display:block;color:#fff;text-align:center;line-height:16px;font-size:12px}
 .done p{text-decoration:line-through;color:var(--muted)}
+
 .btn{
   display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--deep);
   padding:10px 16px;border-radius:999px;font-size:13px;font-weight:600;
@@ -170,49 +202,55 @@ tfoot td{font-weight:700;background:#fafafa;border-bottom:0}
 .btn.ghost{background:#f1f4f8;color:var(--marine)}
 .btn.danger{background:var(--redbg);color:var(--red)}
 .plain{color:var(--marine);font-weight:600;font-size:13px}
-.tabs-pill{display:inline-flex;gap:4px;background:rgba(0,0,0,.04);border-radius:999px;padding:4px;margin-bottom:14px}
+
+.tabs-pill{display:inline-flex;gap:4px;background:rgba(0,0,0,.04);border-radius:999px;padding:4px;margin:4px 0 14px}
 .tabs-pill button{padding:8px 14px;border-radius:999px;font-size:13px;font-weight:550;color:var(--muted)}
 .tabs-pill button.active{background:var(--marine);color:#fff}
+
 .oss-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--gap)}
 .country-card{
   background:#fff;border:1px solid rgba(0,0,0,.05);border-radius:var(--radius);
-  padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;
+  padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px;
 }
 .country-card .head{display:flex;justify-content:space-between;align-items:start;gap:10px}
-.country-card .head h3{font-size:16px;color:var(--deep);display:flex;align-items:center;gap:8px;font-weight:650}
-.spark-wrap{margin-top:4px}
-.spark{width:100%;height:78px;display:block}
+.country-card .head h3{font-size:15px;color:var(--deep);display:flex;align-items:center;gap:8px;font-weight:650}
+.spark-wrap{margin-top:2px}
+.spark{width:100%;height:72px;display:block}
 .spark-meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-top:6px;font-variant-numeric:tabular-nums}
 .spark-meta strong{color:var(--deep);font-weight:600}
-.trend-note{font-size:13px;color:var(--deep);margin-top:4px;font-weight:500}
-.empty-soft{padding:18px;text-align:center;color:var(--muted);font-size:13px;background:#fafbfc;border-radius:14px;border:1px dashed var(--line)}
+.trend-note{font-size:12px;color:var(--deep);margin-top:4px;font-weight:500}
+.empty-soft{padding:16px;text-align:center;color:var(--muted);font-size:13px;background:#fafbfc;border-radius:14px;border:1px dashed var(--line)}
 .add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:8px}
 .add-row label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted)}
 .add-row select{padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;min-width:200px;color:var(--deep)}
-.scenario{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;background:#fafbfc;border:1px solid var(--line);padding:16px;border-radius:16px;margin-bottom:16px}
+
+.scenario{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;background:#fafbfc;border:1px solid var(--line);padding:14px;border-radius:16px;margin-bottom:12px}
 .control label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;color:var(--deep);gap:8px}
 .control strong{font-variant-numeric:tabular-nums}
-.control small{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.control small{display:none}
 input[type=range]{width:100%;accent-color:var(--marine)}
-.forecast-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:14px 0 0}
-.forecast-sum .value{font-size:24px;font-weight:650;color:var(--deep);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
-.forecast-sum .caption{font-size:12px;color:var(--muted);margin-top:4px}
-.bar-row{margin-bottom:14px}
+.forecast-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:12px 0 0}
+.forecast-sum .value{font-size:22px;font-weight:650;color:var(--deep);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.forecast-sum .caption{font-size:12px;color:var(--muted);margin-top:2px}
+
+.bar-row{margin-bottom:12px}
 .bar-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;gap:8px;font-weight:500}
 .track{height:8px;border-radius:999px;background:#edf0f4;overflow:hidden}
 .track>div{height:100%;border-radius:999px;background:var(--marine)}
-.timeline{border-left:1px solid #d9dee5;padding-left:18px}
-.timeline-item{position:relative;padding-bottom:16px}
-.timeline-item:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);position:absolute;left:-22px;top:5px}
+
+.timeline{border-left:1px solid #d9dee5;padding-left:16px}
+.timeline-item{position:relative;padding-bottom:14px}
+.timeline-item:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold);position:absolute;left:-20px;top:5px}
 .timeline-item h3{font-size:14px;margin:4px 0;color:var(--deep)}
-.timeline-item p{font-size:12px;color:var(--muted)}
-.note{font-size:12px;color:var(--muted);margin-top:12px}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
 .callout{
-  background:var(--amberbg);border:1px solid rgba(138,106,31,.18);border-radius:14px;padding:14px;
-  display:flex;gap:10px;font-size:13px;color:var(--amber);margin-bottom:14px;
+  background:var(--amberbg);border:1px solid rgba(138,106,31,.18);border-radius:14px;padding:12px 14px;
+  display:flex;gap:10px;align-items:center;font-size:13px;color:var(--amber);margin-bottom:12px;
 }
 .callout.attention{background:var(--redbg);border-color:rgba(163,59,54,.2);color:var(--red)}
-.callout strong{display:block;color:var(--deep);margin-bottom:2px}
+.callout strong{color:var(--deep);font-weight:650;margin-right:4px}
+.callout p{display:none} /* distill: title+pill only, detail in info */
+
 .popover-backdrop{position:fixed;inset:0;background:rgba(6,30,82,.4);z-index:40;display:none}
 .popover-backdrop.show{display:block}
 .popover{
@@ -237,20 +275,34 @@ input[type=range]{width:100%;accent-color:var(--marine)}
 .toast.show{display:block}
 .mobile-overlay{display:none}
 footer{margin-top:28px;padding-top:16px;border-top:1px solid #dedfdc;display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted);flex-wrap:wrap}
-.filterbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:10px}
+.filterbar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:8px}
 .legend span{display:flex;align-items:center;gap:6px}
 .legend i{width:9px;height:9px;border-radius:2px;display:inline-block}
 .draw-line{stroke-dasharray:1;stroke-dashoffset:1;animation:drawLine .9s var(--ease-io) forwards}
 @keyframes drawLine{to{stroke-dashoffset:0}}
-.bar-grow{transform:scaleY(0);transform-origin:bottom;animation:barIn .6s var(--ease-out) forwards}
+.bar-grow{transform:scaleY(0);transform-origin:bottom;animation:barIn .55s var(--ease-out) forwards}
 @keyframes barIn{to{transform:scaleY(1)}}
-@media(max-width:980px){
+
+.kpi-rail{display:contents}
+
+@media(max-width:1100px){
   .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
   .card.span-2,.card.span-3{grid-column:span 2}
   .card.span-4{grid-column:span 2}
+  .card.row-2{grid-row:span 1}
   .oss-grid,.scenario,.forecast-sum{grid-template-columns:1fr}
 }
+
+.rail-only{display:none}
+.rail-cost{display:none}
+@media(max-width:760px){
+  .desk-only{display:none!important}
+  .rail-only{display:flex!important}
+  .desk-span{display:none!important}
+  .rail-cost{display:flex!important}
+}
+
 @media(max-width:760px){
   :root{--sidebar:0px}
   .sidebar{transform:translateX(-100%);transition:transform .2s var(--ease-out);width:220px;align-items:stretch;padding:18px 12px}
@@ -262,15 +314,28 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid #dedfdc;display:fle
   .shell{margin-left:0}
   .menu-button{display:grid}
   .mobile-overlay.show{display:block;position:fixed;inset:0;background:rgba(6,30,82,.5);z-index:25}
-  .topbar{padding:0 16px}
-  main{padding:18px 16px 40px}
-  h1{font-size:24px}
-  .bento{grid-template-columns:1fr;gap:14px}
-  .card.span-2,.card.span-3,.card.span-4{grid-column:span 1}
-  .k-value{font-size:34px}
-  .card{padding:18px}
-  table{min-width:560px}
+  .topbar{padding:0 14px;height:48px}
+  .crumb .crumb-client,.crumb .crumb-sep{display:none}
+  main{padding:16px 14px 40px;max-width:none}
+  h1{font-size:22px}
+  .bento{grid-template-columns:1fr 1fr;grid-auto-rows:auto;gap:12px}
+  .card.span-2,.card.span-3,.card.span-4,.card.row-2{grid-column:span 2;grid-row:span 1}
+  .card.hero{grid-column:span 2;min-height:140px}
+  .card.hero .k-value{font-size:36px}
+  .kpi-rail{
+    display:flex;grid-column:span 2;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  }
+  .kpi-rail::-webkit-scrollbar{display:none}
+  .kpi-rail .kpi{
+    flex:0 0 44%;scroll-snap-align:start;min-width:44%;grid-column:auto;padding:14px;
+  }
+  .kpi-rail .k-value{font-size:24px;margin-top:6px}
+  .kpi-rail .k-spark{display:none}
+  .card{padding:16px}
+  table{min-width:520px}
   .hero{transform:none!important}
+  .oss-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -286,9 +351,9 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid #dedfdc;display:fle
   <div class="sticky-head">
     <div class="demo-banner" role="status"><span class="dot" aria-hidden="true"></span><span><strong>Voorbeelddata</strong> · <span id="client-name">Noordmarkt BV</span> · geen echte cijfers</span></div>
     <header class="topbar">
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;min-width:0">
         <button class="menu-button" id="menu" aria-label="Menu" aria-controls="sidebar" aria-expanded="false"><i class="iconoir-menu" aria-hidden="true"></i></button>
-        <div class="crumb" id="crumb">Overzicht</div>
+        <div class="crumb" id="crumb"><span class="crumb-client">Noordmarkt BV</span><span class="crumb-sep"> / </span><span class="crumb-view">Overzicht</span></div>
       </div>
       <div>
         <label class="sr" for="period">Periode</label>
@@ -323,6 +388,7 @@ try{
 window.dispatchEvent(new Event('motion-ready'));
 </script>
 <script>
+
 (function(){
 'use strict';
 
@@ -659,65 +725,91 @@ const ICONOIR={
   actions:'iconoir-check-circle',alert:'iconoir-warning-triangle',close:'iconoir-xmark'
 };
 function ii(n){return '<i class="'+(ICONOIR[n]||ICONOIR.overview)+'" aria-hidden="true"></i>';}
-
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200);}
 function tag(t,c){return '<span class="tag '+c+'">'+esc(t)+'</span>';}
-function kpi(label,valueHtml,delta,opts){
-  opts=opts||{};
-  const cls='card kpi enter'+(opts.hero?' hero':'')+(opts.span?' span-'+opts.span:'');
-  const delay=opts.i!=null?(opts.i*50):0;
-  const info=opts.info?'<button class="info" type="button" data-explain="'+esc(opts.info)+'" aria-label="Uitleg">i</button>':'';
-  const dlt=delta?('<div class="k-delta'+(opts.deltaClass?(' '+opts.deltaClass):'')+'">'+delta+'</div>'):'';
-  const orb=opts.hero?'<div class="hero-orb" aria-hidden="true"></div>':'';
-  return '<article class="'+cls+'" style="animation-delay:'+delay+'ms" data-enter="'+(opts.i||0)+'">'+orb+
-    '<div class="k-label"><span>'+label+'</span>'+info+'</div>'+
-    '<div class="k-value" data-count-wrap="1">'+valueHtml+'</div>'+dlt+'</article>';
+function pill(txt,cls){return '<span class="pill '+(cls||'neutral')+'">'+txt+'</span>';}
+function deltaPill(growth){
+  const up=growth>=0;
+  return pill((up?'▲ ':'▼ ')+pct(Math.abs(growth)), up?'up':'down');
 }
-function panel(title,body,extra,opts){
-  opts=opts||{};
-  const delay=opts.i!=null?(opts.i*50):0;
-  const span=opts.span?(' span-'+opts.span):' span-4';
-  return '<section class="card panel enter'+span+'" style="animation-delay:'+delay+'ms">'+
-    '<div class="panel-h"><div><h2>'+title+'</h2></div>'+(extra||'')+'</div>'+body+'</section>';
-}
+function infoBtn(text){return '<button class="info" type="button" data-explain="'+esc(text)+'" aria-label="Uitleg">i</button>';}
+
 function moneyCount(n,d){
-  d=d||0;
-  const x=Number(n)||0;
+  d=d||0;const x=Number(n)||0;
   return '<span class="count-prefix">€&nbsp;</span><span class="count-num" data-count="'+x+'" data-decimals="'+d+'">'+x.toLocaleString('nl-NL',{minimumFractionDigits:d,maximumFractionDigits:d})+'</span>';
 }
 function plainCount(n){
   return '<span class="count-num" data-count="'+Number(n)+'" data-decimals="0">'+Number(n).toLocaleString('nl-NL')+'</span>';
 }
 
+function kpiCard(opts){
+  const o=opts||{};
+  const cls=['card','kpi','enter',o.hero?'hero':'',o.span?('span-'+o.span):'',o.row?('row-'+o.row):'',o.extraClass||''].filter(Boolean).join(' ');
+  const delay=(o.i||0)*45;
+  const foot=(o.pills||[]).join('')+(o.info?infoBtn(o.info):'');
+  const spark=o.sparkHtml||'';
+  return '<article class="'+cls+'" style="animation-delay:'+delay+'ms">'+
+    (o.hero?'<div class="hero-orb" aria-hidden="true"></div>':'')+
+    '<div class="k-label"><span>'+o.label+'</span>'+(o.topRight||'')+'</div>'+
+    '<div class="k-value">'+o.value+'</div>'+
+    spark+
+    (foot?'<div class="k-foot">'+foot+'</div>':'')+
+  '</article>';
+}
+function panel(title,body,opts){
+  const o=opts||{};
+  const cls=['card','panel','enter',o.span?('span-'+o.span):'span-4',o.row?('row-'+o.row):''].filter(Boolean).join(' ');
+  const delay=(o.i||0)*45;
+  return '<section class="'+cls+'" style="animation-delay:'+delay+'ms">'+
+    '<div class="panel-h"><h2>'+title+'</h2>'+(o.extra||'')+'</div>'+body+'</section>';
+}
+
+function miniSpark(values,opts){
+  opts=opts||{};
+  if(!values||values.length<2)return '';
+  const W=160,H=36,pad=2;
+  const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
+  const x=i=>pad+i*(W-pad*2)/Math.max(1,values.length-1);
+  const y=v=>pad+(H-pad*2)*(1-(v-min)/span);
+  const pts=values.map((v,i)=>x(i)+','+y(v)).join(' ');
+  const stroke=opts.light?'rgba(255,255,255,.85)':'#0C3B7A';
+  const fill=opts.light?'rgba(212,183,106,.25)':'rgba(12,59,122,.12)';
+  const area=pts+' '+x(values.length-1)+','+(H-pad)+' '+x(0)+','+(H-pad);
+  const gid='ks'+Math.random().toString(36).slice(2,6);
+  return '<div class="k-spark"><svg viewBox="0 0 '+W+' '+H+'" aria-hidden="true">'+
+    '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+(opts.light?'#D4B76A':'#0C3B7A')+'" stop-opacity=".35"/><stop offset="100%" stop-color="'+(opts.light?'#D4B76A':'#0C3B7A')+'" stop-opacity="0"/></linearGradient></defs>'+
+    '<polygon points="'+area+'" fill="url(#'+gid+')"/>'+
+    '<polyline class="draw-line" pathLength="1" points="'+pts+'" fill="none" stroke="'+stroke+'" stroke-width="2" stroke-linejoin="round"/>'+
+    '</svg></div>';
+}
+
 function easeOutCubic(t){return 1-Math.pow(1-t,3);}
 function runCountUps(root){
   if(reduceMotion)return;
-  const nodes=(root||document).querySelectorAll('[data-count]');
-  nodes.forEach(el=>{
-    const target=Number(el.dataset.count);const dec=Number(el.dataset.decimals||0);
-    const start=performance.now();const dur=1200;
-    const from=0;
+  (root||document).querySelectorAll('[data-count]').forEach(el=>{
+    const target=Number(el.dataset.count),dec=Number(el.dataset.decimals||0);
+    const start=performance.now(),dur=1200;
     function frame(now){
       const t=Math.min(1,(now-start)/dur);
-      const v=from+(target-from)*easeOutCubic(t);
+      const v=target*easeOutCubic(t);
       const shown=t>=1?target:(dec?Math.round(v*Math.pow(10,dec))/Math.pow(10,dec):Math.round(v));
       el.textContent=shown.toLocaleString('nl-NL',{minimumFractionDigits:dec,maximumFractionDigits:dec});
       if(t<1)requestAnimationFrame(frame);
       else el.textContent=target.toLocaleString('nl-NL',{minimumFractionDigits:dec,maximumFractionDigits:dec});
     }
-    el.textContent=from.toLocaleString('nl-NL',{minimumFractionDigits:dec,maximumFractionDigits:dec});
+    el.textContent=(0).toLocaleString('nl-NL',{minimumFractionDigits:dec,maximumFractionDigits:dec});
     requestAnimationFrame(frame);
   });
 }
 function applyStagger(root){
   const items=(root||document).querySelectorAll('.enter');
-  items.forEach((el,i)=>{el.style.animationDelay=(i*50)+'ms';});
+  items.forEach((el,i)=>{el.style.animationDelay=(i*45)+'ms';});
   if(reduceMotion){items.forEach(el=>{el.style.opacity='1';el.style.transform='none';el.style.animation='none';});}
   else if(window.__MOTION__){
     try{
       const {animate,stagger}=window.__MOTION__;
       items.forEach(el=>{el.style.opacity='0';el.style.animation='none';});
-      animate(items,{opacity:[0,1],y:[15,0],scale:[0.98,1]},{type:'spring',stiffness:100,damping:15,delay:stagger(0.05)});
+      animate(items,{opacity:[0,1],y:[12,0],scale:[0.985,1]},{type:'spring',stiffness:110,damping:16,delay:stagger(0.045)});
     }catch(e){}
   }
 }
@@ -730,42 +822,52 @@ function initHeroTilt(root){
     const r=hero.getBoundingClientRect();
     const px=(e.clientX-r.left)/r.width-0.5;
     const py=(e.clientY-r.top)/r.height-0.5;
-    hero.style.transform='perspective(900px) rotateY('+(px*6)+'deg) rotateX('+(-py*6)+'deg)';
+    hero.style.transform='perspective(900px) rotateY('+(px*5)+'deg) rotateX('+(-py*5)+'deg)';
   });
   hero.addEventListener('pointerleave',()=>{hero.style.transform='';});
 }
 
-function revenueChart(){
+function historieSeries(){
   const labels=['apr','mei','jun','jul','aug','sep'],vals=Object.values(MODEL.historie);
   const ind=['jul','aug','sep'].indexOf(state.period);
   const show=vals.slice(0,ind+4),labs=labels.slice(0,ind+4);
   show[show.length-1]=omzetTotaal();
-  const W=740,H=220,l=44,t=10,b=30,h=H-t-b,max=140000,w=(W-l-16)/show.length;
-  let v='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzetontwikkeling">';
-  [0,40000,80000,120000].forEach(a=>{const y=t+h*(1-a/max);v+='<line x1="'+l+'" x2="720" y1="'+y+'" y2="'+y+'" stroke="#edf0f3"/><text x="34" y="'+(y+4)+'" fill="#8791a0" text-anchor="end" font-size="10">'+a/1000+'k</text>';});
+  return {show,labs};
+}
+
+function revenueChart(){
+  const {show,labs}=historieSeries();
+  const W=720,H=260,l=8,r=12,t=28,b=36,h=H-t-b,max=140000;
+  const w=(W-l-r)/show.length;
+  let v='<div class="chart-wrap" data-barchart="1"><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzetontwikkeling">';
   show.forEach((a,i)=>{
-    const bw=Math.min(42,w*.45),x=l+i*w+(w-bw)/2,y=t+h*(1-a/max),on=i===show.length-1;
+    const bw=Math.min(48,w*.52),x=l+i*w+(w-bw)/2,bh=h*a/max,y=t+h-bh,on=i===show.length-1;
     const delay=i*20;
-    v+='<rect class="bar-grow" style="animation-delay:'+delay+'ms" x="'+x+'" y="'+y+'" width="'+bw+'" height="'+(h*a/max)+'" rx="4" fill="'+(on?'#C49A30':'#0C3B7A')+'" opacity="'+(on?'1':'.78')+'"><title>'+labs[i]+': '+money(a)+'</title></rect>';
-    v+='<text x="'+(x+bw/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#8791a0" font-size="10">'+labs[i]+'</text>';
+    /* rounded top via path */
+    const rr=10;
+    const path='M'+(x)+','+(y+bh)+' L'+(x)+','+(y+rr)+' Q'+(x)+','+y+' '+(x+rr)+','+y+' L'+(x+bw-rr)+','+y+' Q'+(x+bw)+','+y+' '+(x+bw)+','+(y+rr)+' L'+(x+bw)+','+(y+bh)+' Z';
+    v+='<path class="bar-grow" style="animation-delay:'+delay+'ms" d="'+path+'" fill="'+(on?'#C49A30':'#0C3B7A')+'" opacity="'+(on?1:.78)+'"><title>'+labs[i]+': '+money(a)+'</title></path>';
+    if(on)v+='<text x="'+(x+bw/2)+'" y="'+(y-8)+'" text-anchor="middle" fill="#061E52" font-size="13" font-weight="650">'+money(a)+'</text>';
+    v+='<text x="'+(x+bw/2)+'" y="'+(H-10)+'" text-anchor="middle" fill="#555" font-size="12" font-weight="500">'+labs[i]+'</text>';
   });
-  return '<div class="legend"><span><i style="background:#0C3B7A"></i>2026</span><span><i style="background:#C49A30"></i>Geselecteerde maand</span></div>'+v+'</svg>';
+  v+='</svg><div class="chart-tip" role="tooltip"></div></div>';
+  return v;
 }
 
 function lineChart(actual,buffer){
   const vals=actual.concat([buffer,0]);
   const max=Math.ceil(Math.max(...vals)/5000)*5000+5000,min=Math.min(0,Math.floor(Math.min(...vals)/5000)*5000-2000);
-  const W=740,H=230,l=50,r=14,t=14,b=28,w=W-l-r,h=H-t-b;
+  const W=740,H=250,l=44,r=14,t=18,b=32,w=W-l-r,h=H-t-b;
   const x=i=>l+i*w/(actual.length-1),y=v=>t+(max-v)/(max-min)*h;
   const pts=actual.map((a,i)=>x(i)+','+y(a)).join(' ');
   const area=pts+' '+(x(actual.length-1))+','+y(min)+' '+x(0)+','+y(min);
   let v='<div class="chart-wrap" data-linechart="1"><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Cashprognose 13 weken">';
   v+='<defs><linearGradient id="cashFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0C3B7A" stop-opacity=".18"/><stop offset="100%" stop-color="#0C3B7A" stop-opacity="0"/></linearGradient></defs>';
-  for(let j=0;j<5;j++){const val=min+(max-min)*j/4;v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(val)+'" y2="'+y(val)+'" stroke="#e9edf1"/><text x="'+(l-8)+'" y="'+(y(val)+4)+'" text-anchor="end" fill="#7c8797" font-size="10">'+Math.round(val/1000)+'k</text>';}
+  for(let j=0;j<4;j++){const val=min+(max-min)*j/3;v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(val)+'" y2="'+y(val)+'" stroke="#eceff3"/><text x="'+(l-6)+'" y="'+(y(val)+4)+'" text-anchor="end" fill="#555" font-size="12">'+Math.round(val/1000)+'k</text>';}
   v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(buffer)+'" y2="'+y(buffer)+'" stroke="#c49a30" stroke-dasharray="5 5"/>';
   v+='<polygon class="draw-area" points="'+area+'" fill="url(#cashFill)" opacity="'+(reduceMotion?1:0)+'"/>';
   v+='<polyline class="draw-line" pathLength="1" points="'+pts+'" fill="none" stroke="#0c3b7a" stroke-width="2.6" stroke-linejoin="round"/>';
-  actual.forEach((a,i)=>{v+='<circle class="pt" data-i="'+i+'" data-v="'+a+'" cx="'+x(i)+'" cy="'+y(a)+'" r="'+(a<buffer?4:3)+'" fill="'+(a<buffer?'#a33b36':'#0c3b7a')+'"/>';if(i%2===0)v+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle" fill="#7c8797" font-size="10">W'+(i+1)+'</text>';});
+  actual.forEach((a,i)=>{v+='<circle class="pt" data-i="'+i+'" cx="'+x(i)+'" cy="'+y(a)+'" r="'+(a<buffer?4:3)+'" fill="'+(a<buffer?'#a33b36':'#0c3b7a')+'"/>';if(i%2===0)v+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" fill="#555" font-size="12">W'+(i+1)+'</text>';});
   v+='<line class="crosshair" x1="0" x2="0" y1="'+t+'" y2="'+(t+h)+'" visibility="hidden"/>';
   v+='</svg><div class="chart-tip" role="tooltip"></div></div>';
   return v;
@@ -774,9 +876,7 @@ function lineChart(actual,buffer){
 function bindLineTooltip(root){
   const wrap=(root||document).querySelector('[data-linechart]');
   if(!wrap)return;
-  const svg=wrap.querySelector('svg');
-  const tip=wrap.querySelector('.chart-tip');
-  const cross=wrap.querySelector('.crosshair');
+  const svg=wrap.querySelector('svg'),tip=wrap.querySelector('.chart-tip'),cross=wrap.querySelector('.crosshair');
   const pts=[...wrap.querySelectorAll('circle.pt')];
   const f=forecast();
   function showAt(i){
@@ -784,36 +884,24 @@ function bindLineTooltip(root){
     const cx=+p.getAttribute('cx');
     cross.setAttribute('x1',cx);cross.setAttribute('x2',cx);cross.setAttribute('visibility','visible');
     const row=f.list[i];
-    tip.innerHTML='<strong>Week '+(i+1)+'</strong><br>'+dateFmt(row.date)+'<br>'+money(row.end);
+    tip.innerHTML='<strong>W'+(i+1)+'</strong> · '+dateFmt(row.date)+'<br>'+money(row.end);
     tip.classList.add('show');
-    const svgRect=svg.getBoundingClientRect();
-    const scale=svgRect.width/740;
-    tip.style.left=(cx*scale)+'px';
-    tip.style.top=(+p.getAttribute('cy')*scale)+'px';
+    const scale=svg.getBoundingClientRect().width/740;
+    tip.style.left=(cx*scale)+'px';tip.style.top=(+p.getAttribute('cy')*scale)+'px';
   }
   function hide(){tip.classList.remove('show');cross.setAttribute('visibility','hidden');}
-  svg.addEventListener('pointermove',e=>{
-    const rect=svg.getBoundingClientRect();
-    const mx=(e.clientX-rect.left)*(740/rect.width);
-    let best=0,bd=1e9;
-    pts.forEach((p,i)=>{const d=Math.abs(+p.getAttribute('cx')-mx);if(d<bd){bd=d;best=i;}});
-    showAt(best);
-  });
+  function nearest(e){
+    const rect=svg.getBoundingClientRect();const mx=(e.clientX-rect.left)*(740/rect.width);
+    let best=0,bd=1e9;pts.forEach((p,i)=>{const d=Math.abs(+p.getAttribute('cx')-mx);if(d<bd){bd=d;best=i;}});return best;
+  }
+  svg.addEventListener('pointermove',e=>showAt(nearest(e)));
   svg.addEventListener('pointerleave',hide);
-  svg.addEventListener('click',e=>{
-    const rect=svg.getBoundingClientRect();
-    const mx=(e.clientX-rect.left)*(740/rect.width);
-    let best=0,bd=1e9;
-    pts.forEach((p,i)=>{const d=Math.abs(+p.getAttribute('cx')-mx);if(d<bd){bd=d;best=i;}});
-    showAt(best);
-  });
+  svg.addEventListener('click',e=>showAt(nearest(e)));
   if(!reduceMotion){
-    const line=wrap.querySelector('.draw-line');
-    const area=wrap.querySelector('.draw-area');
+    const line=wrap.querySelector('.draw-line'),area=wrap.querySelector('.draw-area');
     if(line){line.style.strokeDasharray='1';line.style.strokeDashoffset='1';
-      requestAnimationFrame(()=>{line.style.transition='stroke-dashoffset .9s cubic-bezier(0.77,0,0.175,1)';line.style.strokeDashoffset='0';});
-    }
-    if(area){setTimeout(()=>{area.style.transition='opacity .5s ease';area.style.opacity='1';},400);}
+      requestAnimationFrame(()=>{line.style.transition='stroke-dashoffset .9s cubic-bezier(0.77,0,0.175,1)';line.style.strokeDashoffset='0';});}
+    if(area)setTimeout(()=>{area.style.transition='opacity .45s ease';area.style.opacity='1';},380);
   }
 }
 
@@ -825,20 +913,20 @@ function ratePct(r){
 function spark(values,labels){
   if(!values||!values.length)return '<div class="empty-soft">Nog geen trend</div>';
   const labs=labels||MODEL.trendLabels||[];
-  const W=320,H=78,padL=2,padR=2,padT=8,padB=18;
+  const W=320,H=72,padL=2,padR=2,padT=8,padB=16;
   const min=Math.min(...values),max=Math.max(...values),span=Math.max(1,max-min);
   const x=i=>padL+i*(W-padL-padR)/Math.max(1,values.length-1);
   const y=v=>padT+(H-padT-padB)*(1-(v-min)/span);
   const pts=values.map((v,i)=>x(i)+','+y(v)).join(' ');
   const area=pts+' '+x(values.length-1)+','+(H-padB)+' '+x(0)+','+(H-padB);
   const gid='sp'+Math.random().toString(36).slice(2,7);
-  let svg='<svg class="spark" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzettrend over 6 maanden">';
+  let svg='<svg class="spark" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzettrend">';
   svg+='<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0C3B7A" stop-opacity=".16"/><stop offset="100%" stop-color="#0C3B7A" stop-opacity="0"/></linearGradient></defs>';
   svg+='<polygon points="'+area+'" fill="url(#'+gid+')"/>';
   svg+='<polyline class="draw-line" pathLength="1" points="'+pts+'" fill="none" stroke="#0C3B7A" stroke-width="2.2" stroke-linejoin="round"/>';
   values.forEach((v,i)=>{
-    svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="2.6" fill="#0C3B7A"><title>'+(labs[i]||('M'+(i+1)))+': '+money(v)+'</title></circle>';
-    if(labs[i])svg+='<text x="'+x(i)+'" y="'+(H-4)+'" text-anchor="middle" fill="#7c8797" font-size="9">'+labs[i]+'</text>';
+    svg+='<circle cx="'+x(i)+'" cy="'+y(v)+'" r="2.4" fill="#0C3B7A"><title>'+(labs[i]||'')+': '+money(v)+'</title></circle>';
+    if(labs[i])svg+='<text x="'+x(i)+'" y="'+(H-2)+'" text-anchor="middle" fill="#555" font-size="11">'+labs[i]+'</text>';
   });
   svg+='</svg>';
   const start=values[0],end=values[values.length-1];
@@ -849,53 +937,98 @@ function spark(values,labels){
     '<p class="trend-note">'+gtxt+'</p></div>';
 }
 
+function whoPill(door){
+  const d=(door||'').toLowerCase();
+  if(d.includes('mollie'))return pill('Mollie','gold');
+  if(d.startsWith('jij'))return pill('Jij','marine');
+  return pill('DT Admin','neutral');
+}
+
 /* ===== Views ===== */
 function viewOverzicht(){
-  const w=winst(),kt=kanaalTotalen();
+  const w=winst(),kt=kanaalTotalen(),btw=btwSamenvatting();
   const growth=state.period==='sep'?((MODEL.historie.sep/MODEL.historie.aug)-1)*100:state.period==='aug'?((MODEL.historie.aug/MODEL.historie.jul)-1)*100:((MODEL.historie.jul/MODEL.historie.jun)-1)*100;
-  const gsign=growth>=0?'+':'';
+  const hist=Object.values(MODEL.historie);
+  const winSeries=hist.map(h=>Math.round(w.winst*(h/MODEL.historie.sep)));
+  const costSeries=hist.map(h=>Math.round((w.variabel+w.vast)*(h/MODEL.historie.sep)));
+
   let html='<div class="bento kpis">';
-  html+=kpi('Omzet',moneyCount(w.omzet),gsign+pct(growth)+' t.o.v. vorige maand',{hero:true,i:0,deltaClass:growth>=0?'pos':'neg',info:'Netto-omzet excl. btw in '+periodLabel()});
-  html+=kpi('Kosten',moneyCount(w.variabel+w.vast),'Variabel + vast',{i:1});
-  html+=kpi('Resultaat',moneyCount(w.winst),'Vóór belasting',{i:2,deltaClass:w.winst>=0?'pos':'neg'});
-  html+=kpi('Bankcash',moneyCount(MODEL.cash.bank),'Peildatum '+dateFmt(MODEL.client.peil),{i:3});
+  html+=kpiCard({hero:true,span:2,i:0,label:'Resultaat',value:moneyCount(w.winst),
+    sparkHtml:miniSpark(winSeries,{light:true}),
+    pills:[deltaPill(growth)],
+    info:'Omzet − kosten, vóór belasting · '+periodLabel()});
+  html+=kpiCard({extraClass:'desk-only',i:1,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
+    pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
+    info:'Beschikbaar op peildatum '+dateFmt(MODEL.client.peil)});
+  html+=kpiCard({extraClass:'desk-only',i:2,label:'Omzet',value:moneyCount(w.omzet),
+    sparkHtml:miniSpark(hist),
+    pills:[deltaPill(growth)],
+    info:'Netto-omzet excl. btw · '+periodLabel()});
+
+  html+='<div class="kpi-rail">';
+  html+=kpiCard({extraClass:'rail-only',i:1,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
+    pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
+    info:'Beschikbaar op peildatum '+dateFmt(MODEL.client.peil)});
+  html+=kpiCard({extraClass:'rail-only',i:2,label:'Omzet',value:moneyCount(w.omzet),
+    pills:[deltaPill(growth)],
+    info:'Netto-omzet excl. btw · '+periodLabel()});
+  html+=kpiCard({span:2,extraClass:'desk-span',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),sparkHtml:miniSpark(costSeries),info:'Variabel + vast'});
+  html+=kpiCard({extraClass:'rail-cost',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),info:'Variabel + vast'});
+  html+=kpiCard({i:4,label:'Mollie hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Hold','amber')],info:'Geblokkeerde reserve'});
+  html+=kpiCard({i:5,label:'Btw',value:moneyCount(btw.teBetalen),pills:[pill('te betalen','marine')],info:'Na aftrek voorbelasting'});
   html+='</div>';
+
+  const acts=MODEL.acties.filter(a=>!state.done[a.id]).slice(0,4).map(a=>
+    '<div class="action"><input type="checkbox" class="check" data-task="'+a.id+'" aria-label="'+esc(a.titel)+'"><div style="flex:1"><p>'+esc(a.titel)+'</p><div class="meta">'+whoPill(a.door)+pill(dateFmt(a.datum).replace(/ 2026/,''),'neutral')+(a.prio==='Hoog'?pill('Hoog','down'):'')+'</div></div></div>'
+  ).join('');
+
+  html+=panel('Omzet',revenueChart(),{span:2,row:2,i:6});
+  html+=panel('Acties',
+    acts+'<div style="margin-top:auto;padding-top:10px;display:flex;justify-content:space-between;align-items:center"><span class="pill neutral">'+MODEL.acties.filter(a=>!state.done[a.id]).length+' open</span><button class="plain" data-view="acties">Alles →</button></div>',
+    {span:2,row:2,i:7});
+
   const channels=Object.keys(kt).map(n=>{
     const r=kt[n];return '<div class="bar-row"><div class="bar-top"><span>'+n+'</span><strong>'+money(r.omzet)+'</strong></div><div class="track"><div style="width:'+(r.omzet/w.omzet*100)+'%;background:'+r.kleur+'"></div></div></div>';
   }).join('');
-  const acts=MODEL.acties.filter(a=>!state.done[a.id]).slice(0,3).map(a=>'<div class="action"><input type="checkbox" class="check" data-task="'+a.id+'" aria-label="'+esc(a.titel)+'"><div><p>'+esc(a.titel)+'</p><small>'+dateFmt(a.datum)+' · '+esc(a.door)+'</small></div></div>').join('');
-  html+='<div class="bento" style="margin-top:var(--gap)">';
-  html+=panel('Omzetontwikkeling',revenueChart(),'',{span:2,i:4});
-  html+=panel('Deze week',acts+'<div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center"><span class="note" style="margin:0">'+MODEL.acties.filter(a=>!state.done[a.id]).length+' open</span><button class="plain" data-view="acties">Alle acties →</button></div>','',{span:2,i:5});
-  html+=panel('Omzet per verkoopkanaal',channels,'',{span:4,i:6});
+  html+=panel('Kanalen',channels,{span:2,i:8});
+  html+=kpiCard({i:9,label:'Onderweg',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')],info:'In ontvangstenplanning'});
+  html+=kpiCard({i:10,label:'Marge',value:'<span class="count-num" data-count="'+Math.round(w.winst/w.omzet*100)+'" data-decimals="0">'+Math.round(w.winst/w.omzet*100)+'</span><span style="font-size:.5em;margin-left:2px">%</span>',pills:[pill('vóór btw','neutral')],info:'Resultaat / omzet'});
   html+='</div>';
   return html;
 }
 
+
 function viewResultaat(){
   const w=winst(),v=variabelTotaal(),f=vastTotaal();
+  const hist=Object.values(MODEL.historie);
+  const winSeries=hist.map(h=>Math.round(w.winst*(h/MODEL.historie.sep)));
   let html='<div class="bento kpis">';
-  html+=kpi('Omzet',moneyCount(w.omzet),periodLabel(),{i:0});
-  html+=kpi('Variabele kosten',moneyCount(v.som),'Inkoop, fees, verzending, ads',{i:1});
-  html+=kpi('Vaste kosten',moneyCount(f.som),'Incl. abonnementen '+money(f.abonnementen),{i:2});
-  html+=kpi('Resultaat',moneyCount(w.winst),pct(w.winst/w.omzet*100)+' van de omzet',{hero:true,i:3});
-  html+='</div><div class="bento" style="margin-top:var(--gap)">';
+  html+=kpiCard({hero:true,span:2,i:0,label:'Resultaat',value:moneyCount(w.winst),
+    sparkHtml:miniSpark(winSeries,{light:true}),
+    pills:[pill(pct(w.winst/w.omzet*100)+' marge','up')],
+    info:'Vóór belasting · '+periodLabel()});
+  html+=kpiCard({i:1,label:'Omzet',value:moneyCount(w.omzet),pills:[pill(periodLabel().split(' ')[0],'neutral')]});
+  html+=kpiCard({i:2,label:'Variabel',value:moneyCount(v.som),info:'Inkoop, fees, verzending, ads'});
+  html+='<div class="kpi-rail">';
+  html+=kpiCard({i:3,label:'Vast',value:moneyCount(f.som),info:'Incl. abonnementen '+money(f.abonnementen)});
+  html+=kpiCard({i:4,label:'Contributiemarge',value:moneyCount(w.cm),info:'Omzet − variabel'});
+  html+=kpiCard({i:5,label:'Ads',value:moneyCount(v.ads),pills:[pill(pct(v.ads/w.omzet*100),'amber')]});
+  html+='</div>';
   html+=panel('Van omzet naar resultaat',
     '<div class="metric"><span>Netto-omzet</span><strong>'+money(w.omzet)+'</strong></div>'+
     '<div class="metric"><span>Inkoop</span><strong>− '+money(v.inkoop)+'</strong></div>'+
-    '<div class="metric"><span>Fees, verzending, retouren</span><strong>− '+money(v.fees+v.verzending+v.retouren)+'</strong></div>'+
+    '<div class="metric"><span>Fees · verzending · retouren</span><strong>− '+money(v.fees+v.verzending+v.retouren)+'</strong></div>'+
     '<div class="metric"><span>Advertenties</span><strong>− '+money(v.ads)+'</strong></div>'+
     '<div class="metric"><span>Vaste kosten</span><strong>− '+money(f.som)+'</strong></div>'+
-    '<div class="metric"><span>Resultaat vóór belasting</span><strong>'+money(w.winst)+'</strong></div>'
-  ,'',{span:2,i:4});
-  html+=panel('Vaste kosten-opbouw',
+    '<div class="metric"><span>Resultaat</span><strong>'+money(w.winst)+'</strong></div>',
+    {span:2,row:2,i:6});
+  html+=panel('Vaste kosten',
     '<div class="metric"><span>Abonnementen</span><strong>'+money(f.abonnementen)+'</strong></div>'+
     '<div class="metric"><span>Personeel</span><strong>'+money(f.personeel)+'</strong></div>'+
     '<div class="metric"><span>Huur & opslag</span><strong>'+money(f.huurOpslag)+'</strong></div>'+
     '<div class="metric"><span>Verzekeringen</span><strong>'+money(f.verzekeringen)+'</strong></div>'+
-    '<div class="metric"><span>Overig</span><strong>'+money(f.overig)+'</strong></div>'+
-    '<div class="note">Het abonnemententotaal komt terug op de tab Abonnementen.</div>'
-  ,'',{span:2,i:5});
+    '<div class="metric"><span>Overig</span><strong>'+money(f.overig)+'</strong></div>',
+    {span:2,row:2,i:7});
   html+='</div>';
   return html;
 }
@@ -905,54 +1038,58 @@ function viewAbonnementen(){
   const variabel=MODEL.abonnementen.filter(a=>a.cyclus==='variabel').reduce((s,a)=>s+a.bedrag,0);
   const beoordelen=MODEL.abonnementen.filter(a=>a.status==='beoordelen').length;
   let html='<div class="bento kpis">';
-  html+=kpi('Vaste maandkosten',moneyCount(vaste),'Jaarbedragen / 12',{hero:true,i:0});
-  html+=kpi('Per jaar',moneyCount(vaste*12),'Genormaliseerd',{i:1});
-  html+=kpi('Variabel verbruik',moneyCount(variabel),'Laatste maand',{i:2});
-  html+=kpi('Te beoordelen',plainCount(beoordelen),'Contract of gebruik checken',{i:3});
-  html+='</div>';
+  html+=kpiCard({hero:true,span:2,i:0,label:'Vaste maandkosten',value:moneyCount(vaste),
+    pills:[pill(money(vaste*12)+'/jr','neutral')],info:'Jaarbedragen / 12'});
+  html+=kpiCard({i:1,label:'Te beoordelen',value:plainCount(beoordelen),pills:[beoordelen?pill('Actie','amber'):pill('Ok','up')]});
+  html+=kpiCard({i:2,label:'Variabel',value:moneyCount(variabel),info:'Laatste maand'});
   const rows=MODEL.abonnementen.map(a=>{
     const m=a.cyclus==='variabel'?a.bedrag:aboMaand(a);
-    const bed=a.cyclus==='jaar'?money(a.bedrag)+'<div class="note" style="margin:0">per jaar</div>':a.cyclus==='variabel'?money(a.bedrag)+'<div class="note" style="margin:0">laatste</div>':money(a.bedrag)+'<div class="note" style="margin:0">per maand</div>';
-    return '<tr><td><strong>'+esc(a.naam)+'</strong><div class="note" style="margin:0">'+esc(a.cat)+(a.note?' · '+esc(a.note):'')+'</div></td><td class="number">'+bed+'</td><td class="number">'+money(m)+'</td><td>'+dateFmt(a.verlenging)+'</td><td>'+(a.opzeg?dateFmt(a.opzeg):'—')+'</td><td>'+tag(a.status==='beoordelen'?'Beoordelen':a.status==='variabel'?'Variabel':'Actief',a.status==='beoordelen'?'amber':a.status==='variabel'?'neutral':'green')+'</td></tr>';
+    const st=a.status==='beoordelen'?'Beoordelen':a.status==='variabel'?'Variabel':'Actief';
+    const sc=a.status==='beoordelen'?'amber':a.status==='variabel'?'neutral':'green';
+    return '<tr><td><strong>'+esc(a.naam)+'</strong></td><td class="number">'+money(a.cyclus==='jaar'?a.bedrag:a.bedrag)+'</td><td class="number">'+money(m)+'</td><td>'+(a.opzeg?pill(dateFmt(a.opzeg).replace(/ 2026/,''),'amber'):'—')+'</td><td>'+tag(st,sc)+'</td></tr>';
   }).join('');
-  html+='<div class="bento" style="margin-top:var(--gap)">'+panel('Terugkerende verplichtingen',
-    '<div class="table-wrap"><table><thead><tr><th>Dienst</th><th class="number">Bedrag</th><th class="number">Per maand</th><th>Verlenging</th><th>Opzeg vóór</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Vaste abonnementen</td><td></td><td class="number">'+money(vaste)+'</td><td colspan="3"></td></tr></tfoot></table></div>'
-  ,'',{span:4,i:4})+'</div>';
+  html+=panel('Diensten',
+    '<div class="table-wrap"><table><thead><tr><th>Dienst</th><th class="number">Bedrag</th><th class="number">/mnd</th><th>Opzeg</th><th>Status</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Vaste abonnementen</td><td></td><td class="number">'+money(vaste)+'</td><td colspan="2"></td></tr></tfoot></table></div>',
+    {span:4,i:3});
+  html+='</div>';
   return html;
 }
 
-function callout(title,text,red){return '<div class="callout'+(red?' attention':'')+'">'+ii('alert')+'<div><strong>'+title+'</strong>'+text+'</div></div>';}
-function calloutBlok(){
-  return callout('Mollie houdt €\u00a03.200 vast','Providers zetten soms een reserve of hold op uitbetalingen (chargebacks, risico). Dat geld hoort bij je omzet, maar staat niet op je bank. In deze demo is dat apart zichtbaar zodat je het niet dubbel telt of vergeet.',true);
+function callout(title,detail,red){
+  return '<div class="callout'+(red?' attention':'')+'">'+ii('alert')+'<div><strong>'+title+'</strong></div>'+infoBtn(detail)+'</div>';
 }
 
 function viewCashflow(){
   const f=forecast();
   let html='<div class="bento kpis">';
-  html+=kpi('Beschikbare bankcash',moneyCount(MODEL.cash.bank),'Peildatum '+dateFmt(MODEL.client.peil),{hero:true,i:0});
-  html+=kpi('Mollie onderweg',moneyCount(MODEL.cash.mollieOnderweg),'In de ontvangstenplanning',{i:1});
-  html+=kpi('Geblokkeerde reserve',moneyCount(MODEL.cash.mollieGeblokkeerd),'Niet vrij opneembaar',{i:2});
-  html+=kpi('Laagste scenario',moneyCount(f.min),'Week van '+dateFmt(f.minRow.date),{i:3,deltaClass:f.min<state.buffer?'neg':''});
+  html+=kpiCard({hero:true,span:2,i:0,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
+    pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
+    info:'Beschikbaar · peildatum '+dateFmt(MODEL.client.peil)});
+  html+=kpiCard({i:1,label:'Onderweg',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')]});
+  html+=kpiCard({i:2,label:'Hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Geblokkeerd','amber')],info:'Niet vrij opneembaar'});
+  html+='<div class="kpi-rail">';
+  html+=kpiCard({i:3,label:'Laagste',value:moneyCount(f.min),pills:[f.min<state.buffer?pill('Onder buffer','down'):pill('Ok','up')],info:'Week van '+dateFmt(f.minRow.date)});
+  html+=kpiCard({i:4,label:'Eind 13w',value:moneyCount(f.end)});
+  html+=kpiCard({i:5,label:'Onder buffer',value:plainCount(f.below),pills:[f.below?pill('weken','amber'):pill('0','up')]});
   html+='</div>';
-  html+='<div class="bento" style="margin-top:var(--gap)">';
-  html+=panel('Cashflow komende 13 weken',
-    calloutBlok()+
+
+  html+=panel('13 weken',
+    callout('Mollie houdt '+money(MODEL.cash.mollieGeblokkeerd)+' vast','Providers zetten soms een reserve op uitbetalingen. Telt niet als beschikbare cash.',true)+
     '<div class="scenario">'+
-    '<div class="control"><label for="receipt-change">Ontvangsten <strong id="receipt-label">'+(state.receiptChange>=0?'+':'')+state.receiptChange+'%</strong></label><input id="receipt-change" type="range" min="-30" max="30" step="5" value="'+state.receiptChange+'"><small>Uitgaven blijven gelijk.</small></div>'+
-    '<div class="control"><label for="delay">Later ontvangen <strong id="delay-label">'+state.delay+' dagen</strong></label><input id="delay" type="range" min="0" max="14" step="7" value="'+state.delay+'"><small>Alleen timing, geen omzetverlies.</small></div>'+
-    '<div class="control"><label for="buffer">Gewenste buffer <strong id="buffer-label">'+money(state.buffer)+'</strong></label><input id="buffer" type="range" min="0" max="20000" step="1000" value="'+state.buffer+'"><small>Eigen scenario-instelling.</small></div>'+
+    '<div class="control"><label for="receipt-change">Ontvangsten <strong id="receipt-label">'+(state.receiptChange>=0?'+':'')+state.receiptChange+'%</strong></label><input id="receipt-change" type="range" min="-30" max="30" step="5" value="'+state.receiptChange+'"></div>'+
+    '<div class="control"><label for="delay">Vertraging <strong id="delay-label">'+state.delay+' d</strong></label><input id="delay" type="range" min="0" max="14" step="7" value="'+state.delay+'"></div>'+
+    '<div class="control"><label for="buffer">Buffer <strong id="buffer-label">'+money(state.buffer)+'</strong></label><input id="buffer" type="range" min="0" max="20000" step="1000" value="'+state.buffer+'"></div>'+
     '</div>'+
-    (f.min<0?callout('Negatief saldo in het scenario','De planning komt onder nul. Bespreek inkoopmomenten of financiering.',true):f.below?callout('Buffer vraagt aandacht','In '+f.below+' weken kom je onder je gekozen buffer.',false):callout('Binnen de gekozen buffer','De geplande saldi blijven boven je buffer. Check de aannames wel.',false))+
+    (f.min<0?callout('Negatief saldo','Planning komt onder nul.',true):f.below?callout(f.below+' weken onder buffer','Scenario onder je buffer.',false):callout('Binnen buffer','Saldi blijven boven de gekozen buffer.',false))+
     '<div class="legend"><span><i style="background:#0C3B7A"></i>Eindsaldo</span><span><i style="background:#C49A30"></i>Buffer</span></div>'+
-    lineChart(f.list.map(r=>r.end),state.buffer)+
-    '<div class="forecast-sum"><div><div class="value">'+money(f.end)+'</div><div class="caption">Eindsaldo na 13 weken</div></div><div><div class="value">'+f.below+'</div><div class="caption">Weken onder buffer</div></div><div><div class="value">'+money(f.pending)+'</div><div class="caption">Ontvangsten na horizon</div></div></div>'+
-    '<div class="note">Eindsaldo = beginsaldo + ontvangsten − betalingen, week na week. De geblokkeerde Mollie-reserve telt niet mee als beschikbare cash.</div>'
-  ,'',{span:4,i:4});
+    lineChart(f.list.map(r=>r.end),state.buffer),
+    {span:4,row:2,i:6});
+
   html+=panel('Weekplanning',
-    '<div class="table-wrap"><table><thead><tr><th>Week vanaf</th><th class="number">Begin</th><th class="number">In</th><th class="number">Uit</th><th class="number">Eind</th><th>Signaal</th></tr></thead><tbody>'+
-    f.list.map(r=>'<tr><td>'+dateFmt(r.date)+'</td><td class="number">'+money(r.start)+'</td><td class="number">'+money(r.receipts)+'</td><td class="number">'+money(r.payments)+'</td><td class="number" style="color:'+(r.end<state.buffer?'var(--red)':'var(--deep)')+'">'+money(r.end)+'</td><td>'+tag(r.end<0?'Onder nul':r.end<state.buffer?'Onder buffer':'Ok',r.end<0?'red':r.end<state.buffer?'amber':'green')+'</td></tr>').join('')+
-    '</tbody></table></div>'
-  ,'',{span:4,i:5});
+    '<div class="table-wrap"><table><thead><tr><th>Vanaf</th><th class="number">Begin</th><th class="number">In</th><th class="number">Uit</th><th class="number">Eind</th><th></th></tr></thead><tbody>'+
+    f.list.map(r=>'<tr><td>'+dateFmt(r.date).replace(/ 2026/,'')+'</td><td class="number">'+money(r.start)+'</td><td class="number">'+money(r.receipts)+'</td><td class="number">'+money(r.payments)+'</td><td class="number" style="color:'+(r.end<state.buffer?'var(--red)':'var(--deep)')+'">'+money(r.end)+'</td><td>'+tag(r.end<0?'Onder nul':r.end<state.buffer?'Buffer':'Ok',r.end<0?'red':r.end<state.buffer?'amber':'green')+'</td></tr>').join('')+
+    '</tbody></table></div>',
+    {span:4,i:7});
   html+='</div>';
   return html;
 }
@@ -960,25 +1097,26 @@ function viewCashflow(){
 function viewBelastingen(){
   const b=btwSamenvatting();
   let html='<div class="bento kpis">';
-  html+=kpi('Verschuldigde btw',moneyCount(b.verschuldigd),'NL + OSS + IOSS',{hero:true,i:0});
-  html+=kpi('Voorbelasting',moneyCount(b.voorbelasting),'Op inkoop en kosten',{i:1});
-  html+=kpi('Te betalen',moneyCount(b.teBetalen),'Na aftrek voorbelasting',{i:2});
-  html+=kpi('Buitenland-omzet',moneyCount(buitenlandOmzet()),'OSS + IOSS',{i:3});
-  html+='</div><div class="bento" style="margin-top:var(--gap)">';
-  html+=panel('Btw per land',
+  html+=kpiCard({hero:true,span:2,i:0,label:'Te betalen',value:moneyCount(b.teBetalen),
+    pills:[pill('na voorbelasting','neutral')],
+    info:'Verschuldigd − voorbelasting'});
+  html+=kpiCard({i:1,label:'Verschuldigd',value:moneyCount(b.verschuldigd),pills:[pill('NL+OSS+IOSS','marine')]});
+  html+=kpiCard({i:2,label:'Voorbelasting',value:moneyCount(b.voorbelasting)});
+  html+='<div class="kpi-rail">';
+  html+=kpiCard({i:3,label:'NL btw',value:moneyCount(b.nl.btw),pills:[pill(ratePct(b.nl.rate),'neutral')]});
+  html+=kpiCard({i:4,label:'OSS btw',value:moneyCount(b.oss.btw)});
+  html+=kpiCard({i:5,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS omzet'});
+  html+='</div>';
+  html+=panel('Per land',
     '<div class="table-wrap"><table><thead><tr><th>Land</th><th class="number">Omzet</th><th class="number">Tarief</th><th class="number">Btw</th></tr></thead><tbody>'+
-    '<tr><td>Nederland (binnenland)</td><td class="number">'+money(b.nl.omzet)+'</td><td class="number">'+ratePct(b.nl.rate)+'</td><td class="number">'+money(b.nl.btw)+'</td></tr>'+
-    b.oss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">OSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
-    b.ioss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' <span class="tag neutral">IOSS</span></td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
-    '</tbody><tfoot><tr><td>Totaal verschuldigd</td><td></td><td></td><td class="number">'+money(b.verschuldigd)+'</td></tr></tfoot></table></div>'+
-    '<div class="note">Detail per regeling staat op de tab OSS / IOSS. Tarieven: '+VAT_SOURCE.name+'.</div>'
-  ,'',{span:2,i:4});
-  html+=panel('Per verkoopkanaal',
-    Object.keys(kanaalTotalen()).map(k=>{const r=kanaalTotalen()[k];const landen=Object.keys(r.landen).map(l=>l+': '+money(r.landen[l])).join(' · ');return '<div class="metric"><span><strong>'+k+'</strong><div class="note" style="margin:0">'+landen+'</div></span><strong>'+money(r.omzet)+'</strong></div>';}).join('')
-  ,'',{span:2,i:5});
-  html+=panel('Belastingkalender',
-    '<div class="timeline">'+MODEL.belastingkalender.map(x=>'<div class="timeline-item"><span class="note" style="margin:0">'+dateFmt(x.datum)+' · '+esc(x.wie)+'</span><h3>'+esc(x.label)+'</h3><p>'+tag(x.status==='binnenkort'?'Binnenkort':'Gepland',x.status==='binnenkort'?'amber':'neutral')+'</p></div>').join('')+'</div>'
-  ,'',{span:4,i:6});
+    '<tr><td>Nederland</td><td class="number">'+money(b.nl.omzet)+'</td><td class="number">'+ratePct(b.nl.rate)+'</td><td class="number">'+money(b.nl.btw)+'</td></tr>'+
+    b.oss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' '+pill('OSS','neutral')+'</td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
+    b.ioss.rows.map(r=>'<tr data-tax-land="'+r.land+'" data-tax-rate="'+r.rate+'" data-tax-omzet="'+r.omzet+'" data-tax-btw="'+r.btw+'"><td>'+EU_VAT[r.land].naam+' '+pill('IOSS','neutral')+'</td><td class="number">'+money(r.omzet)+'</td><td class="number">'+ratePct(r.rate)+'</td><td class="number">'+money(r.btw)+'</td></tr>').join('')+
+    '</tbody><tfoot><tr><td>Totaal</td><td></td><td></td><td class="number">'+money(b.verschuldigd)+'</td></tr></tfoot></table></div>',
+    {span:2,row:2,i:6});
+  html+=panel('Kalender',
+    '<div class="timeline">'+MODEL.belastingkalender.map(x=>'<div class="timeline-item"><div class="meta">'+pill(dateFmt(x.datum).replace(/ 2026/,''),'neutral')+' '+pill(x.wie,'marine')+'</div><h3>'+esc(x.label)+'</h3>'+tag(x.status==='binnenkort'?'Binnenkort':'Gepland',x.status==='binnenkort'?'amber':'neutral')+'</div>').join('')+'</div>',
+    {span:2,row:2,i:7});
   html+='</div>';
   return html;
 }
@@ -991,7 +1129,7 @@ function vatPopoverHtml(code){
   else rows.push('<div><span>Verlaagd</span><strong>geen in EC-tabel</strong></div>');
   if(v.super!=null)rows.push('<div><span>Superverlaagd</span><strong>'+v.super+'%</strong></div>');
   if(v.parking!=null)rows.push('<div><span>Parking</span><strong>'+v.parking+'%</strong></div>');
-  return '<h4 id="sheet-title">Btw-tarieven · '+esc(v.naam)+'</h4><div class="rates">'+rows.join('')+'</div>'+(v.note?'<p>'+esc(v.note)+'</p>':'')+'<div class="src">Bron: '+esc(VAT_SOURCE.name)+'<br>'+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+(v.extraBron?'<br>Tweede bron: '+esc(v.extraBron):'')+'<br><a href="'+VAT_SOURCE.url+'" target="_blank" rel="noopener">Your Europe</a> · <a href="'+VAT_SOURCE.tedb+'" target="_blank" rel="noopener">TEDB</a></div>';
+  return '<h4 id="sheet-title">Btw · '+esc(v.naam)+'</h4><div class="rates">'+rows.join('')+'</div>'+(v.note?'<p>'+esc(v.note)+'</p>':'')+'<div class="src">Bron: '+esc(VAT_SOURCE.name)+'<br>'+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+(v.extraBron?'<br>Tweede bron: '+esc(v.extraBron):'')+'<br><a href="'+VAT_SOURCE.url+'" target="_blank" rel="noopener">Your Europe</a> · <a href="'+VAT_SOURCE.tedb+'" target="_blank" rel="noopener">TEDB</a></div>';
 }
 
 function countryCard(code,omzet,btw,schemeLabel,scheme){
@@ -1001,15 +1139,15 @@ function countryCard(code,omzet,btw,schemeLabel,scheme){
   const rate=v.standaard;
   const rateTxt=ratePct(rate);
   const trendLast=trend?trend.values[trend.values.length-1]:'';
-  const rangeLbl=trend?(trend.labels[0]+'–'+trend.labels[trend.labels.length-1]+' 2026'):'';
+  const rangeLbl=trend?(trend.labels[0]+'–'+trend.labels[trend.labels.length-1]):'';
   return '<article class="country-card enter" data-land="'+code+'" data-rate="'+rate+'" data-omzet="'+omzet+'" data-btw="'+(btw==null?'':btw)+'" data-trend-last="'+trendLast+'">'+
     '<div class="head"><h3>'+esc(v.naam)+' <button class="info" type="button" data-vatinfo="'+code+'" aria-label="Btw-tarieven '+esc(v.naam)+'" aria-haspopup="dialog">i</button></h3>'+
     (state.extraCountries.includes(code)?'<button class="btn danger" type="button" data-remove-land="'+code+'" style="padding:6px 10px;font-size:11px">Verwijderen</button>':'')+
     '</div>'+
     (has?
-      '<div class="metric" style="border:0;padding:0"><span>Omzet '+schemeLabel+'</span><strong>'+money(omzet)+'</strong></div>'+
-      '<div class="metric" style="border:0;padding:0"><span>Verschuldigde btw (<span class="rate-label">'+rateTxt+'</span>)</span><strong>'+money(btw)+'</strong></div>'+
-      (trend?'<div><div class="note" style="margin-bottom:4px">Omzettrend · '+rangeLbl+'</div>'+spark(trend.values,trend.labels)+'</div>':'')
+      '<div class="metric" style="border:0;padding:0"><span>'+schemeLabel+'</span><strong>'+money(omzet)+'</strong></div>'+
+      '<div class="metric" style="border:0;padding:0"><span>Btw <span class="rate-label">'+rateTxt+'</span></span><strong>'+money(btw)+'</strong></div>'+
+      (trend?'<div><div class="note" style="margin:0 0 4px">Trend · '+rangeLbl+'</div>'+spark(trend.values,trend.labels)+'</div>':'')
     :'<div class="empty-soft">Nog geen verkopen in dit land</div>')+
   '</article>';
 }
@@ -1019,48 +1157,56 @@ function viewOss(){
   const tot=schemeTotals(scheme);
   const other=scheme==='oss'?schemeTotals('ioss'):schemeTotals('oss');
   let html='<div class="bento kpis">';
-  html+=kpi(scheme==='oss'?'OSS-omzet':'IOSS-omzet',moneyCount(tot.omzet),periodLabel(),{hero:true,i:0,info:scheme==='oss'?'One-Stop Shop: B2C btw in andere EU-landen via één portal.':'Import One-Stop Shop: importzendingen tot € 150.'});
-  html+=kpi('Verschuldigde btw',moneyCount(tot.btw),'Tegen landelijk standaardtarief',{i:1});
-  html+=kpi(scheme==='oss'?'IOSS-omzet':'OSS-omzet',moneyCount(other.omzet),'Andere regeling',{i:2});
-  html+=kpi('Buitenland totaal',moneyCount(buitenlandOmzet()),'OSS + IOSS · sluit aan op Belastingen',{i:3});
+  html+=kpiCard({hero:true,span:2,i:0,label:scheme==='oss'?'OSS-omzet':'IOSS-omzet',value:moneyCount(tot.omzet),
+    pills:[pill(periodLabel().split(' ')[0],'neutral')],
+    info:scheme==='oss'?'B2C btw via Unie-regeling OSS.':'Importzendingen ≤ €150 via IOSS.'});
+  html+=kpiCard({i:1,label:'Btw',value:moneyCount(tot.btw),pills:[pill('standaard','marine')]});
+  html+=kpiCard({i:2,label:scheme==='oss'?'IOSS':'OSS',value:moneyCount(other.omzet)});
+  html+='<div class="kpi-rail">';
+  html+=kpiCard({i:3,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS'});
+  html+=kpiCard({i:4,label:'Landen',value:plainCount(tot.rows.length)});
+  html+=kpiCard({i:5,label:'Peil tarieven',value:'<span style="font-size:18px;font-weight:650;letter-spacing:-.3px">'+VAT_SOURCE.peil.replace(' oktober ',' okt ')+'</span>',info:VAT_SOURCE.name});
   html+='</div>';
-  html+='<div class="tabs-pill" role="tablist" aria-label="Regeling" style="margin-top:var(--gap)"><button type="button" data-scheme="oss" class="'+(scheme==='oss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='oss')+'">OSS (B2C EU)</button><button type="button" data-scheme="ioss" class="'+(scheme==='ioss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='ioss')+'">IOSS (import ≤ €150)</button></div>';
-  const dataMap={};
-  tot.rows.forEach(r=>{dataMap[r.land]=r;});
+  html+='<div class="span-4" style="grid-column:span 4"><div class="tabs-pill" role="tablist" aria-label="Regeling"><button type="button" data-scheme="oss" class="'+(scheme==='oss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='oss')+'">OSS</button><button type="button" data-scheme="ioss" class="'+(scheme==='ioss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='ioss')+'">IOSS ≤ €150</button></div></div>';
+
+  const dataMap={};tot.rows.forEach(r=>{dataMap[r.land]=r;});
   const shown=new Set([...tot.rows.map(r=>r.land),...state.extraCountries]);
   const cards=[...shown].sort().map(code=>{
     const r=dataMap[code];
     return countryCard(code,r?r.omzet:0,r?r.btw:0,scheme.toUpperCase(),scheme);
   }).join('');
-  html+='<div class="bento">'+panel('Per EU-land',
+  html+=panel('EU-landen',
     '<div class="oss-grid">'+cards+'</div>'+
     '<div class="add-row">'+
-    '<label>Land toevoegen<select id="add-land" aria-label="EU-land toevoegen"><option value="">Kies een land…</option>'+
+    '<label>Land<select id="add-land" aria-label="EU-land toevoegen"><option value="">Kies…</option>'+
     Object.keys(EU_VAT).filter(c=>c!=='NL'&&!shown.has(c)).sort((a,b)=>EU_VAT[a].naam.localeCompare(EU_VAT[b].naam,'nl')).map(c=>'<option value="'+c+'">'+esc(EU_VAT[c].naam)+'</option>').join('')+
     '</select></label>'+
     '<button class="btn" type="button" id="btn-add-land">Toevoegen</button>'+
     '</div>'+
-    '<div class="note">Toegevoegde landen zonder verkopen veranderen de totalen niet. Bron tarieven: '+esc(VAT_SOURCE.name)+'; '+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+'. Demo-peildatum cijfers: '+dateFmt(MODEL.client.peil)+'.</div>'
-  ,'',{span:4,i:4})+'</div>';
+    '<div class="note">Lege landen wijzigen totalen niet. '+esc(VAT_SOURCE.label)+' '+esc(VAT_SOURCE.peil)+'. Peildatum cijfers: '+dateFmt(MODEL.client.peil)+'.</div>',
+    {span:4,i:6});
+  html+='</div>';
   return html;
 }
 
 function viewActies(){
-  let html='<div class="bento">'+panel('Openstaande actiepunten',
-    '<div class="filterbar"><span class="note" style="margin:0">'+MODEL.acties.filter(a=>!state.done[a.id]).length+' van '+MODEL.acties.length+' open</span><button class="btn ghost" type="button" id="reset-tasks">Herstel demo-acties</button></div>'+
-    MODEL.acties.map(a=>'<div class="action'+(state.done[a.id]?' done':'')+'"><input type="checkbox" class="check" data-task="'+a.id+'" '+(state.done[a.id]?'checked':'')+' aria-label="'+esc(a.titel)+'"><div style="flex:1"><p>'+esc(a.titel)+'</p><small>'+esc(a.door)+' · '+dateFmt(a.datum)+'</small><p class="note" style="margin-top:8px;font-weight:400">'+esc(a.tekst)+'</p></div>'+tag(a.prio,a.prio==='Hoog'?'red':'amber')+'</div>').join('')
-  ,'',{span:4,i:0})+'</div>';
+  let html='<div class="bento kpis">';
+  const open=MODEL.acties.filter(a=>!state.done[a.id]).length;
+  html+=kpiCard({hero:true,span:2,i:0,label:'Open',value:plainCount(open),
+    pills:[pill(MODEL.acties.length+' totaal','neutral')]});
+  html+=kpiCard({i:1,label:'Hoog',value:plainCount(MODEL.acties.filter(a=>a.prio==='Hoog'&&!state.done[a.id]).length),pills:[pill('prio','down')]});
+  html+=kpiCard({i:2,label:'Jij',value:plainCount(MODEL.acties.filter(a=>(a.door||'').toLowerCase().startsWith('jij')&&!state.done[a.id]).length),pills:[pill('actie','marine')]});
+  html+=panel('Actiepunten',
+    '<div class="filterbar"><button class="btn ghost" type="button" id="reset-tasks">Herstel</button></div>'+
+    MODEL.acties.map(a=>'<div class="action'+(state.done[a.id]?' done':'')+'"><input type="checkbox" class="check" data-task="'+a.id+'" '+(state.done[a.id]?'checked':'')+' aria-label="'+esc(a.titel)+'"><div style="flex:1"><p>'+esc(a.titel)+'</p><div class="meta">'+whoPill(a.door)+pill(dateFmt(a.datum).replace(/ 2026/,''),'neutral')+tag(a.prio,a.prio==='Hoog'?'red':'amber')+'</div><p class="note" style="margin-top:6px;font-weight:400">'+esc(a.tekst)+'</p></div></div>').join(''),
+    {span:4,i:3});
+  html+='</div>';
   return html;
 }
 
 const TITLES={
-  overzicht:['Overzicht',''],
-  resultaat:['Resultaat & kosten',''],
-  abonnementen:['Abonnementen',''],
-  cashflow:['Cashflow',''],
-  belastingen:['Belastingen',''],
-  oss:['OSS / IOSS',''],
-  acties:['Actiepunten','']
+  overzicht:['Overzicht',''],resultaat:['Resultaat & kosten',''],abonnementen:['Abonnementen',''],
+  cashflow:['Cashflow',''],belastingen:['Belastingen',''],oss:['OSS / IOSS',''],acties:['Actiepunten','']
 };
 
 function renderNav(){
@@ -1071,7 +1217,8 @@ function render(){
   const t=TITLES[state.view];
   document.getElementById('view-title').textContent=t[0];
   const sub=document.getElementById('view-subtitle'); if(sub) sub.textContent=t[1]||'';
-  document.getElementById('crumb').textContent=MODEL.client.naam+' / '+t[0];
+  const crumb=document.getElementById('crumb');
+  crumb.innerHTML='<span class="crumb-client">'+esc(MODEL.client.naam)+'</span><span class="crumb-sep"> / </span><span class="crumb-view">'+esc(t[0])+'</span>';
   document.getElementById('period').value=state.period;
   const cn=document.getElementById('client-name'); if(cn) cn.textContent=MODEL.client.naam;
   document.getElementById('peil-label').textContent=dateFmt(MODEL.client.peil);
@@ -1096,11 +1243,9 @@ function openSidebar(){
   document.getElementById('menu').setAttribute('aria-expanded','true');
   const o=document.getElementById('overlay');o.hidden=false;o.classList.add('show');
 }
-
 function closeVatInfo(){
   const bd=document.getElementById('pop-backdrop');
-  bd.classList.remove('show');bd.hidden=true;
-  bd.innerHTML='';
+  bd.classList.remove('show');bd.hidden=true;bd.innerHTML='';
   const sh=document.getElementById('sheet');
   sh.classList.remove('open');sh.hidden=true;
   document.getElementById('sheet-body').innerHTML='';
@@ -1153,7 +1298,7 @@ function bind(){
     render();
   }
   if(rc){rc.oninput=()=>{document.getElementById('receipt-label').textContent=(+rc.value>=0?'+':'')+rc.value+'%';};rc.onchange=refreshCash;}
-  if(dl){dl.oninput=()=>{document.getElementById('delay-label').textContent=dl.value+' dagen';};dl.onchange=refreshCash;}
+  if(dl){dl.oninput=()=>{document.getElementById('delay-label').textContent=dl.value+' d';};dl.onchange=refreshCash;}
   if(bf){bf.oninput=()=>{document.getElementById('buffer-label').textContent=money(+bf.value);};bf.onchange=refreshCash;}
 }
 
