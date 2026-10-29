@@ -112,7 +112,8 @@ h1{font-size:26px;letter-spacing:-.45px;color:var(--deep);font-weight:650}
 .card.span-2{grid-column:span 2}
 .card.span-3{grid-column:span 3}
 .card.span-4,.span-4{grid-column:span 4}
-.card.row-2{grid-row:span 2;min-height:340px}
+.card.row-2{grid-row:span 2;min-height:300px}
+@media(max-width:760px){.card.row-2,.card.panel{min-height:0!important;height:auto!important}}
 .card.hero{
   background:var(--deep);color:#fff;border-color:transparent;
   transform-style:preserve-3d;min-height:168px;padding:26px;
@@ -331,12 +332,26 @@ footer{margin-top:28px;padding-top:16px;border-top:1px solid #dedfdc;display:fle
     flex:0 0 44%;scroll-snap-align:start;min-width:44%;grid-column:auto;padding:14px;
   }
   .kpi-rail .k-value{font-size:24px;margin-top:6px}
-  .kpi-rail .k-spark{display:none}
+  .kpi-rail .k-spark{display:block;height:28px;margin-top:6px}
+  .kpi-rail .k-spark svg{height:28px}
   .card{padding:16px}
   table{min-width:520px}
   .hero{transform:none!important}
   .oss-grid{grid-template-columns:1fr}
 }
+
+.rail-wrap{display:contents}
+@media(max-width:760px){
+  .rail-wrap{display:block;grid-column:span 2}
+  .rail-wrap .kpi-rail{display:flex;grid-column:auto}
+  .rail-dots{display:flex;justify-content:center;gap:6px;padding:8px 0 2px}
+  .rail-dots button{width:6px;height:6px;border-radius:50%;background:#c5ccd6;padding:0;transition:transform .15s var(--ease-out),background .15s}
+  .rail-dots button.active{background:var(--marine);transform:scale(1.25)}
+}
+@media(min-width:761px){.rail-dots{display:none}}
+.pill.warn{background:var(--amberbg);color:var(--amber)}
+.card.hero .pill.warn{background:rgba(255,255,255,.14);color:var(--lightgold)}
+
 </style>
 </head>
 <body>
@@ -717,6 +732,48 @@ window.__DTADMIN_MODEL__=function(){
   };
 };
 
+
+/* Period metrics + deltas (same formulas as views) */
+function periodMetrics(period){
+  const prev=state.period; state.period=period;
+  const w=winst(); const out={omzet:w.omzet,variabel:w.variabel,vast:w.vast,kosten:w.variabel+w.vast,winst:w.winst,cm:w.cm};
+  state.period=prev; return out;
+}
+function metricDelta(metric){
+  const order=['jul','aug','sep'];
+  const idx=order.indexOf(state.period);
+  if(idx>0){
+    const cur=periodMetrics(order[idx]);
+    const prev=periodMetrics(order[idx-1]);
+    const a=prev[metric], b=cur[metric];
+    return a?((b-a)/Math.abs(a))*100:0;
+  }
+  /* jul vs jun: omzet uit historie; overige metrics evenredig met historie-ratio */
+  if(metric==='omzet'){
+    const prev=MODEL.historie.jun, now=MODEL.historie.jul;
+    return prev?((now-prev)/Math.abs(prev))*100:0;
+  }
+  const sep=periodMetrics('sep');
+  const prev=sep[metric]*(MODEL.historie.jun/MODEL.historie.sep);
+  const now=sep[metric]*(MODEL.historie.jul/MODEL.historie.sep);
+  return prev?((now-prev)/Math.abs(prev))*100:0;
+}
+function deltaPill(growth, kind){
+  /* kind: 'up-good' (omzet/winst) | 'up-bad' (kosten) */
+  const up=growth>=0;
+  const abs=pct(Math.abs(growth));
+  const arrow=up?'▲ ':'▼ ';
+  let cls;
+  if(kind==='up-bad'){
+    cls = up?'warn':(Math.abs(growth)<0.05?'neutral':'up'); /* kosten omlaag = goed */
+  }else{
+    cls = up?'up':'down';
+  }
+  return '<span class="pill '+cls+'" data-delta="'+Number(growth).toFixed(4)+'" data-delta-kind="'+(kind||'up-good')+'">'+arrow+abs+'</span>';
+}
+window.__DTADMIN_DELTA__=function(metric){return metricDelta(metric);};
+window.__DTADMIN_PERIOD_METRICS__=periodMetrics;
+
 /* ===== UI helpers ===== */
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ICONOIR={
@@ -728,10 +785,7 @@ function ii(n){return '<i class="'+(ICONOIR[n]||ICONOIR.overview)+'" aria-hidden
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200);}
 function tag(t,c){return '<span class="tag '+c+'">'+esc(t)+'</span>';}
 function pill(txt,cls){return '<span class="pill '+(cls||'neutral')+'">'+txt+'</span>';}
-function deltaPill(growth){
-  const up=growth>=0;
-  return pill((up?'▲ ':'▼ ')+pct(Math.abs(growth)), up?'up':'down');
-}
+/* deltaPill defined above */
 function infoBtn(text){return '<button class="info" type="button" data-explain="'+esc(text)+'" aria-label="Uitleg">i</button>';}
 
 function moneyCount(n,d){
@@ -801,6 +855,26 @@ function runCountUps(root){
     requestAnimationFrame(frame);
   });
 }
+
+function bindRailDots(root){
+  const rail=(root||document).querySelector('#kpi-rail');
+  const dots=(root||document).querySelector('#rail-dots');
+  if(!rail||!dots)return;
+  if(!window.matchMedia('(max-width:760px)').matches){dots.innerHTML='';return;}
+  const cards=[...rail.querySelectorAll('.kpi')].filter(c=>getComputedStyle(c).display!=='none');
+  if(cards.length<2){dots.innerHTML='';return;}
+  dots.innerHTML=cards.map((_,i)=>'<button type="button" aria-label="Kaart '+(i+1)+'" data-rail-i="'+i+'"></button>').join('');
+  function setActive(i){dots.querySelectorAll('button').forEach((b,j)=>b.classList.toggle('active',j===i));}
+  setActive(0);
+  rail.addEventListener('scroll',()=>{
+    const x=rail.scrollLeft, w=cards[0].offsetWidth+10;
+    setActive(Math.min(cards.length-1, Math.round(x/Math.max(1,w))));
+  },{passive:true});
+  dots.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.railI; cards[i].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'}); setActive(i);
+  });
+}
+
 function applyStagger(root){
   const items=(root||document).querySelectorAll('.enter');
   items.forEach((el,i)=>{el.style.animationDelay=(i*45)+'ms';});
@@ -836,8 +910,10 @@ function historieSeries(){
 }
 
 function revenueChart(){
+  const mobile=window.matchMedia('(max-width:760px)').matches;
+  const fs=mobile?24:15; const fsVal=mobile?26:16;
   const {show,labs}=historieSeries();
-  const W=720,H=260,l=8,r=12,t=28,b=36,h=H-t-b,max=140000;
+  const W=720,H=mobile?210:250,l=8,r=12,t=mobile?30:28,b=mobile?28:34,h=H-t-b,max=140000;
   const w=(W-l-r)/show.length;
   let v='<div class="chart-wrap" data-barchart="1"><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Omzetontwikkeling">';
   show.forEach((a,i)=>{
@@ -847,14 +923,16 @@ function revenueChart(){
     const rr=10;
     const path='M'+(x)+','+(y+bh)+' L'+(x)+','+(y+rr)+' Q'+(x)+','+y+' '+(x+rr)+','+y+' L'+(x+bw-rr)+','+y+' Q'+(x+bw)+','+y+' '+(x+bw)+','+(y+rr)+' L'+(x+bw)+','+(y+bh)+' Z';
     v+='<path class="bar-grow" style="animation-delay:'+delay+'ms" d="'+path+'" fill="'+(on?'#C49A30':'#0C3B7A')+'" opacity="'+(on?1:.78)+'"><title>'+labs[i]+': '+money(a)+'</title></path>';
-    if(on)v+='<text x="'+(x+bw/2)+'" y="'+(y-8)+'" text-anchor="middle" fill="#061E52" font-size="13" font-weight="650">'+money(a)+'</text>';
-    v+='<text x="'+(x+bw/2)+'" y="'+(H-10)+'" text-anchor="middle" fill="#555" font-size="12" font-weight="500">'+labs[i]+'</text>';
+    if(on)v+='<text x="'+(x+bw/2)+'" y="'+(y-10)+'" text-anchor="middle" fill="#061E52" font-size="'+fsVal+'" font-weight="650">'+money(a)+'</text>';
+    v+='<text x="'+(x+bw/2)+'" y="'+(H-8)+'" text-anchor="middle" fill="#555" font-size="'+fs+'" font-weight="500">'+(mobile?labs[i].slice(0,3):labs[i])+'</text>';
   });
   v+='</svg><div class="chart-tip" role="tooltip"></div></div>';
   return v;
 }
 
 function lineChart(actual,buffer){
+  const mobile=window.matchMedia('(max-width:760px)').matches;
+  const fs=mobile?22:14;
   const vals=actual.concat([buffer,0]);
   const max=Math.ceil(Math.max(...vals)/5000)*5000+5000,min=Math.min(0,Math.floor(Math.min(...vals)/5000)*5000-2000);
   const W=740,H=250,l=44,r=14,t=18,b=32,w=W-l-r,h=H-t-b;
@@ -863,11 +941,11 @@ function lineChart(actual,buffer){
   const area=pts+' '+(x(actual.length-1))+','+y(min)+' '+x(0)+','+y(min);
   let v='<div class="chart-wrap" data-linechart="1"><svg class="chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Cashprognose 13 weken">';
   v+='<defs><linearGradient id="cashFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0C3B7A" stop-opacity=".18"/><stop offset="100%" stop-color="#0C3B7A" stop-opacity="0"/></linearGradient></defs>';
-  for(let j=0;j<4;j++){const val=min+(max-min)*j/3;v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(val)+'" y2="'+y(val)+'" stroke="#eceff3"/><text x="'+(l-6)+'" y="'+(y(val)+4)+'" text-anchor="end" fill="#555" font-size="12">'+Math.round(val/1000)+'k</text>';}
+  for(let j=0;j<4;j++){const val=min+(max-min)*j/3;v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(val)+'" y2="'+y(val)+'" stroke="#eceff3"/><text x="'+(l-6)+'" y="'+(y(val)+4)+'" text-anchor="end" fill="#555" font-size="'+fs+'">'+Math.round(val/1000)+'k</text>';}
   v+='<line x1="'+l+'" x2="'+(W-r)+'" y1="'+y(buffer)+'" y2="'+y(buffer)+'" stroke="#c49a30" stroke-dasharray="5 5"/>';
   v+='<polygon class="draw-area" points="'+area+'" fill="url(#cashFill)" opacity="'+(reduceMotion?1:0)+'"/>';
   v+='<polyline class="draw-line" pathLength="1" points="'+pts+'" fill="none" stroke="#0c3b7a" stroke-width="2.6" stroke-linejoin="round"/>';
-  actual.forEach((a,i)=>{v+='<circle class="pt" data-i="'+i+'" cx="'+x(i)+'" cy="'+y(a)+'" r="'+(a<buffer?4:3)+'" fill="'+(a<buffer?'#a33b36':'#0c3b7a')+'"/>';if(i%2===0)v+='<text x="'+x(i)+'" y="'+(H-8)+'" text-anchor="middle" fill="#555" font-size="12">W'+(i+1)+'</text>';});
+  actual.forEach((a,i)=>{v+='<circle class="pt" data-i="'+i+'" cx="'+x(i)+'" cy="'+y(a)+'" r="'+(a<buffer?4:3)+'" fill="'+(a<buffer?'#a33b36':'#0c3b7a')+'"/>';if(i%2===0)v+='<text x="'+x(i)+'" y="'+(H-6)+'" text-anchor="middle" fill="#555" font-size="'+fs+'">W'+(i+1)+'</text>';});
   v+='<line class="crosshair" x1="0" x2="0" y1="'+t+'" y2="'+(t+h)+'" visibility="hidden"/>';
   v+='</svg><div class="chart-tip" role="tooltip"></div></div>';
   return v;
@@ -947,7 +1025,9 @@ function whoPill(door){
 /* ===== Views ===== */
 function viewOverzicht(){
   const w=winst(),kt=kanaalTotalen(),btw=btwSamenvatting();
-  const growth=state.period==='sep'?((MODEL.historie.sep/MODEL.historie.aug)-1)*100:state.period==='aug'?((MODEL.historie.aug/MODEL.historie.jul)-1)*100:((MODEL.historie.jul/MODEL.historie.jun)-1)*100;
+  const dWinst=metricDelta('winst');
+  const dOmzet=metricDelta('omzet');
+  const dKosten=metricDelta('kosten');
   const hist=Object.values(MODEL.historie);
   const winSeries=hist.map(h=>Math.round(w.winst*(h/MODEL.historie.sep)));
   const costSeries=hist.map(h=>Math.round((w.variabel+w.vast)*(h/MODEL.historie.sep)));
@@ -955,28 +1035,32 @@ function viewOverzicht(){
   let html='<div class="bento kpis">';
   html+=kpiCard({hero:true,span:2,i:0,label:'Resultaat',value:moneyCount(w.winst),
     sparkHtml:miniSpark(winSeries,{light:true}),
-    pills:[deltaPill(growth)],
+    pills:[deltaPill(dWinst,'up-good')],
     info:'Omzet − kosten, vóór belasting · '+periodLabel()});
   html+=kpiCard({extraClass:'desk-only',i:1,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
     pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
     info:'Beschikbaar op peildatum '+dateFmt(MODEL.client.peil)});
   html+=kpiCard({extraClass:'desk-only',i:2,label:'Omzet',value:moneyCount(w.omzet),
     sparkHtml:miniSpark(hist),
-    pills:[deltaPill(growth)],
+    pills:[deltaPill(dOmzet,'up-good')],
     info:'Netto-omzet excl. btw · '+periodLabel()});
 
-  html+='<div class="kpi-rail">';
+  html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
   html+=kpiCard({extraClass:'rail-only',i:1,label:'Bankcash',value:moneyCount(MODEL.cash.bank),
     pills:[pill(dateFmt(MODEL.client.peil).replace(/ 2026/,''),'neutral')],
     info:'Beschikbaar op peildatum '+dateFmt(MODEL.client.peil)});
   html+=kpiCard({extraClass:'rail-only',i:2,label:'Omzet',value:moneyCount(w.omzet),
-    pills:[deltaPill(growth)],
+    sparkHtml:miniSpark(hist),
+    pills:[deltaPill(dOmzet,'up-good')],
     info:'Netto-omzet excl. btw · '+periodLabel()});
-  html+=kpiCard({span:2,extraClass:'desk-span',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),sparkHtml:miniSpark(costSeries),info:'Variabel + vast'});
-  html+=kpiCard({extraClass:'rail-cost',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),info:'Variabel + vast'});
+  html+=kpiCard({span:2,extraClass:'desk-span',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),sparkHtml:miniSpark(costSeries),
+    pills:[deltaPill(dKosten,'up-bad')],info:'Variabel + vast'});
+  html+=kpiCard({extraClass:'rail-cost',i:3,label:'Kosten',value:moneyCount(w.variabel+w.vast),
+    sparkHtml:miniSpark(costSeries),
+    pills:[deltaPill(dKosten,'up-bad')],info:'Variabel + vast'});
   html+=kpiCard({i:4,label:'Mollie hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Hold','amber')],info:'Geblokkeerde reserve'});
   html+=kpiCard({i:5,label:'Btw',value:moneyCount(btw.teBetalen),pills:[pill('te betalen','marine')],info:'Na aftrek voorbelasting'});
-  html+='</div>';
+  html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
 
   const acts=MODEL.acties.filter(a=>!state.done[a.id]).slice(0,4).map(a=>
     '<div class="action"><input type="checkbox" class="check" data-task="'+a.id+'" aria-label="'+esc(a.titel)+'"><div style="flex:1"><p>'+esc(a.titel)+'</p><div class="meta">'+whoPill(a.door)+pill(dateFmt(a.datum).replace(/ 2026/,''),'neutral')+(a.prio==='Hoog'?pill('Hoog','down'):'')+'</div></div></div>'
@@ -1003,17 +1087,18 @@ function viewResultaat(){
   const hist=Object.values(MODEL.historie);
   const winSeries=hist.map(h=>Math.round(w.winst*(h/MODEL.historie.sep)));
   let html='<div class="bento kpis">';
+  const dW=metricDelta('winst'), dO=metricDelta('omzet'), dK=metricDelta('kosten');
   html+=kpiCard({hero:true,span:2,i:0,label:'Resultaat',value:moneyCount(w.winst),
     sparkHtml:miniSpark(winSeries,{light:true}),
-    pills:[pill(pct(w.winst/w.omzet*100)+' marge','up')],
+    pills:[deltaPill(dW,'up-good'), pill(pct(w.winst/w.omzet*100)+' marge','neutral')],
     info:'Vóór belasting · '+periodLabel()});
-  html+=kpiCard({i:1,label:'Omzet',value:moneyCount(w.omzet),pills:[pill(periodLabel().split(' ')[0],'neutral')]});
+  html+=kpiCard({i:1,label:'Omzet',value:moneyCount(w.omzet),pills:[deltaPill(dO,'up-good')]});
   html+=kpiCard({i:2,label:'Variabel',value:moneyCount(v.som),info:'Inkoop, fees, verzending, ads'});
-  html+='<div class="kpi-rail">';
+  html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
   html+=kpiCard({i:3,label:'Vast',value:moneyCount(f.som),info:'Incl. abonnementen '+money(f.abonnementen)});
-  html+=kpiCard({i:4,label:'Contributiemarge',value:moneyCount(w.cm),info:'Omzet − variabel'});
+  html+=kpiCard({i:4,label:'Kosten',value:moneyCount(w.variabel+w.vast),pills:[deltaPill(dK,'up-bad')],info:'Variabel + vast'});
   html+=kpiCard({i:5,label:'Ads',value:moneyCount(v.ads),pills:[pill(pct(v.ads/w.omzet*100),'amber')]});
-  html+='</div>';
+  html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+=panel('Van omzet naar resultaat',
     '<div class="metric"><span>Netto-omzet</span><strong>'+money(w.omzet)+'</strong></div>'+
     '<div class="metric"><span>Inkoop</span><strong>− '+money(v.inkoop)+'</strong></div>'+
@@ -1067,11 +1152,11 @@ function viewCashflow(){
     info:'Beschikbaar · peildatum '+dateFmt(MODEL.client.peil)});
   html+=kpiCard({i:1,label:'Onderweg',value:moneyCount(MODEL.cash.mollieOnderweg),pills:[pill('Mollie','gold')]});
   html+=kpiCard({i:2,label:'Hold',value:moneyCount(MODEL.cash.mollieGeblokkeerd),pills:[pill('Geblokkeerd','amber')],info:'Niet vrij opneembaar'});
-  html+='<div class="kpi-rail">';
+  html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
   html+=kpiCard({i:3,label:'Laagste',value:moneyCount(f.min),pills:[f.min<state.buffer?pill('Onder buffer','down'):pill('Ok','up')],info:'Week van '+dateFmt(f.minRow.date)});
   html+=kpiCard({i:4,label:'Eind 13w',value:moneyCount(f.end)});
   html+=kpiCard({i:5,label:'Onder buffer',value:plainCount(f.below),pills:[f.below?pill('weken','amber'):pill('0','up')]});
-  html+='</div>';
+  html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
 
   html+=panel('13 weken',
     callout('Mollie houdt '+money(MODEL.cash.mollieGeblokkeerd)+' vast','Providers zetten soms een reserve op uitbetalingen. Telt niet als beschikbare cash.',true)+
@@ -1102,11 +1187,11 @@ function viewBelastingen(){
     info:'Verschuldigd − voorbelasting'});
   html+=kpiCard({i:1,label:'Verschuldigd',value:moneyCount(b.verschuldigd),pills:[pill('NL+OSS+IOSS','marine')]});
   html+=kpiCard({i:2,label:'Voorbelasting',value:moneyCount(b.voorbelasting)});
-  html+='<div class="kpi-rail">';
+  html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
   html+=kpiCard({i:3,label:'NL btw',value:moneyCount(b.nl.btw),pills:[pill(ratePct(b.nl.rate),'neutral')]});
   html+=kpiCard({i:4,label:'OSS btw',value:moneyCount(b.oss.btw)});
   html+=kpiCard({i:5,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS omzet'});
-  html+='</div>';
+  html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+=panel('Per land',
     '<div class="table-wrap"><table><thead><tr><th>Land</th><th class="number">Omzet</th><th class="number">Tarief</th><th class="number">Btw</th></tr></thead><tbody>'+
     '<tr><td>Nederland</td><td class="number">'+money(b.nl.omzet)+'</td><td class="number">'+ratePct(b.nl.rate)+'</td><td class="number">'+money(b.nl.btw)+'</td></tr>'+
@@ -1162,11 +1247,11 @@ function viewOss(){
     info:scheme==='oss'?'B2C btw via Unie-regeling OSS.':'Importzendingen ≤ €150 via IOSS.'});
   html+=kpiCard({i:1,label:'Btw',value:moneyCount(tot.btw),pills:[pill('standaard','marine')]});
   html+=kpiCard({i:2,label:scheme==='oss'?'IOSS':'OSS',value:moneyCount(other.omzet)});
-  html+='<div class="kpi-rail">';
+  html+='<div class="rail-wrap"><div class="kpi-rail" id="kpi-rail">';
   html+=kpiCard({i:3,label:'Buitenland',value:moneyCount(buitenlandOmzet()),info:'OSS + IOSS'});
   html+=kpiCard({i:4,label:'Landen',value:plainCount(tot.rows.length)});
   html+=kpiCard({i:5,label:'Peil tarieven',value:'<span style="font-size:18px;font-weight:650;letter-spacing:-.3px">'+VAT_SOURCE.peil.replace(' oktober ',' okt ')+'</span>',info:VAT_SOURCE.name});
-  html+='</div>';
+  html+='</div><div class="rail-dots" id="rail-dots" aria-hidden="true"></div></div>';
   html+='<div class="span-4" style="grid-column:span 4"><div class="tabs-pill" role="tablist" aria-label="Regeling"><button type="button" data-scheme="oss" class="'+(scheme==='oss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='oss')+'">OSS</button><button type="button" data-scheme="ioss" class="'+(scheme==='ioss'?'active':'')+'" role="tab" aria-selected="'+(scheme==='ioss')+'">IOSS ≤ €150</button></div></div>';
 
   const dataMap={};tot.rows.forEach(r=>{dataMap[r.land]=r;});
@@ -1230,6 +1315,7 @@ function render(){
   runCountUps(content);
   bindLineTooltip(content);
   initHeroTilt(content);
+  bindRailDots(content);
   closeSidebar();
 }
 
