@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="nl" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f3ee" />
+    <meta name="robots" content="noindex" />
+    <title>DT Admin — Dashboard (demo)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script>
+      // pas het opgeslagen thema toe vóór de eerste weergave, zodat er niets flitst
+      try {
+        document.documentElement.dataset.theme = localStorage.getItem('dtadmin-theme') || 'light'
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="./assets/index-D5ziLLg7.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DEyA29LW.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
